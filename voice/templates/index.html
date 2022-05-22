@@ -1,0 +1,69 @@
+<!---Initialize Home Page--->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+
+    </head>
+    <body>
+        <!---Initialize structure of Title and house picture--->
+        <div class = "title">
+            <h1>An (In)audible Chorus :: Voicing ::</h1>
+        </div>
+
+        <!---Containerize main page for styling--->
+        <div class="main">
+
+            <!---Containerize paragraph and form for styling--->
+            <div class="container">
+
+                <div class="intro">
+                    <b>
+                        <p class = "Note"><b>Note: Enter values which are reasonable to the context</b></p>
+                        <p class="Note">{{message}}</p>
+                    </b>
+                </div>
+
+                <br>
+
+                <!---Initialize form structure and inputs, set method to "POST"--->
+                <form action="{{url_for('predict')}}" method="post" class="info">
+                  <select id="voice" name="voice" placeholder="Choose a Voice" required="required">
+                    {% for v in voices %}
+
+                      <option value= "{{v}}"D>{{v}}</option>
+
+                    {% endfor %}
+
+                  </select><span style="color:red"> * </span>
+
+                  <br>
+                  <br>
+
+                  <select id="phonetics" name="phonetics" placeholder="Choose a Language" required="required">
+                    {% for l in languages %}
+
+                      <option value= "{{l}}"D>{{l}}</option>
+
+                    {% endfor %}
+
+                  </select><span style="color:red"> * </span>
+
+                  <br>
+                  <br>
+
+                  <textarea id="text" name="text" rows="4" cols="50" placeholder="Type your text here...">It took me a while to develop a voice, and now that I've got one. Well. I'm not going to be silent!</textarea>
+                  <br>
+                  <br>
+
+                  <input type="text" id="otherinput" name="Otherinfo" placeholder="Something else..."/>
+                  <br>
+                  <br>
+
+                  <button type="submit" id="synthesize" name="synthesizebutton" class="btn">Synthesize</button>
+                </form>
+                <br>
+            </div>
+        </div>
+    </body>
+</html>
