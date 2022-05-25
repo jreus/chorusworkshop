@@ -15,46 +15,93 @@ body {
 
 .wrapper {
   height: 100%;
+  padding: 5vh 0;
   display: flex;
   flex-direction: column;
 }
 
 h1, h2 {
-  font-size: 2rem;
+  font-size: 3rem;
   text-align: center;
   font-weight: normal;
-  padding: 0.5rem 0 0 0;
+  padding: 0 0 0 0;
+  margin-bottom: 2rem;
 }
 
-.main-controls {
-  padding: 0.5rem 0;
-}
-
-canvas {
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-#buttons {
+#controls {
+  padding: 0.2rem 0;
+  margin: 1vh 0;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
-#buttons button {
-  font-size: 1rem;
-  padding: 1rem;
-  width: calc(50% - 0.25rem);
+section, article {
+  display: block;
+}
+
+canvas {
+  display: block;
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
+
+.center-column {
+  min-width: 300px;
+  font-size: 1em;
+  word-wrap: break-word;
+  padding: 0;
+  margin: 0;
+}
+
+.log-text {
+  font-style: italic;
+}
+
+.log-data {
+  font-family: monospace;
+  background: lightgrey;
+}
+
+
+
+.controls {
+  min-width: 300px;
+  width: 40%;
+  padding: 0px 1vw;
+}
+
+.controls label {
+  display: block;
+}
+
+.controls input[type=text] {
+  width: 60%;
+}
+
+.controls textarea {
+  width: 100%;
 }
 
 button {
-  font-size: 1rem;
+  font-size: 2rem;
+  padding: 2rem 0.1rem;
+  width: calc(50% - 0.5rem);
   background: #0088cc;
   text-align: center;
   color: white;
   border: none;
   transition: all 0.2s;
-  padding: 0.5rem;
+  margin: 0.5em auto;
+}
+
+button.record {
+  background: #996666;
+}
+
+button.record:hover, button.record:focus {
+  box-shadow: inset 0px 0px 10px rgba(255, 255, 255, 1);
+  background: #ee1111;
 }
 
 button:hover, button:focus {
@@ -76,9 +123,6 @@ button:active {
   overflow: auto;
 }
 
-section, article {
-  display: block;
-}
 
 .clip {
   padding-bottom: 1rem;
@@ -108,7 +152,7 @@ button.delete {
 
 /* Checkbox hack to control information box display */
 
-label {
+#checkbox-label {
   font-size: 3rem;
   position: absolute;
   top: 2px;
@@ -162,7 +206,7 @@ input[type=checkbox]:checked ~ aside {
      goes past a certain size */
   .wrapper {
     width: 90%;
-    max-width: 1000px;
+    max-width: 2000px;
     margin: 0 auto;
   }
 }

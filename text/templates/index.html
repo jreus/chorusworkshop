@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width">
+      <title>An (In)audible Chorus :: Writing ::</title>
+      <link href="css/style.css" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <!---Initialize structure of Title and house picture--->
+        <div class = "title">
+            <h1>An (In)audible Chorus :: Writing ::</h1>
+        </div>
+
+        <!---Containerize main page for styling--->
+        <div class="main">
+
+            <!---Containerize paragraph and form for styling--->
+            <div class="container">
+
+                <div class="intro">
+                    <b>
+                        <p class="Note">{{message}}</p>
+                    </b>
+                </div>
+
+
+                <!---Initialize form structure and inputs, set method to "POST"--->
+                <form action="{{url_for('predict')}}" method="post" class="info">
+
+                  <div class="input-controls">
+
+                    <div>
+                      <label for="prompt">Type a text prompt:</label>
+                      <textarea id="prompt" name="prompt" rows="10" cols="50" placeholder="Type your text prompt...">{{ last_prompt }}</textarea>
+                    </div>
+
+                    <div>
+                      <label for="temperature">Text randomness:</label>
+                      <br>
+                      <div class="slider-number">
+                        <input type="range" min="1.0" max="100.0" step="1" class="slider" id="temperatureSlider" />
+                        <input type="number" value={{ temperature }} name="temperature" id="temperatureNumber" />
+                      </div>
+                    </div>
+
+                    <div>
+                    <button type="submit" id="continue" name="continuebutton" class="btn">Generate</button>
+                    </div>
+
+                  </div>
+
+
+                </form>
+
+                <hr>
+
+                <div class="predictions">
+
+                  {% for pred in predictions %}
+
+                    <div>
+                    {% for p in pred %}
+                    <p>{{p}}</p>
+                    {% endfor %}
+                    </div>
+
+                  {% endfor %}
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <script src="js/texter.js"></script>
+
+    </body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>An (In)audible Chorus :: Repetitions ::</title>
+        <link href="../css/style.css" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <!---Initialize structure of Title and house picture--->
+        <div class = "title">
+            <h1>An (In)audible Chorus :: Playback ::</h1>
+        </div>
+
+        <!---Containerize main page for styling--->
+        <div class="main">
+
+            <!---Containerize paragraph and form for styling--->
+            <div class="container">
+
+                <div class="intro">
+                    <b>
+                        <p class="Note">{{message}}</p>
+                    </b>
+                </div>
+
+              <div class="audioplayers">
+
+                <div class="player">1
+                  <audio controls>
+                      <source src="../outputs/16_12_43_blonk_000.wav" type="audio/wav">
+                        Your browser does not support the audio tag.
+                  </audio>
+                </div>
+
+                <div class="player">2
+                  <audio controls>
+                      <source src="../outputs/16_12_43_blonk_000.wav" type="audio/wav">
+                        Your browser does not support the audio tag.
+                  </audio>
+                </div>
+
+                <div class="player">3
+                  <audio controls>
+                      <source src="../outputs/16_12_43_blonk_000.wav" type="audio/wav">
+                        Your browser does not support the audio tag.
+                  </audio>
+                </div>
+
+                <div class="player">4
+                  <audio controls>
+                      <source src="../outputs/16_12_43_blonk_000.wav" type="audio/wav">
+                        Your browser does not support the audio tag.
+                  </audio>
+                </div>
+
+                <div class="player">5
+                  <audio controls>
+                      <source src="../outputs/16_12_43_blonk_000.wav" type="audio/wav">
+                        Your browser does not support the audio tag.
+                  </audio>
+                </div>
+
+                <div class="player">6
+                  <audio controls>
+                      <source src="../outputs/16_12_43_blonk_000.wav" type="audio/wav">
+                        Your browser does not support the audio tag.
+                  </audio>
+                </div>
+
+
+              </div>
+
+                <br />
+
+
+                <form action="{{url_for('predict')}}" method="post" class="info">
+
+                  <div class="column-form">
+
+                  <select id="voice" name="voice" placeholder="Choose a Voice" required="required">
+                    {% for v in voices %}
+
+                      <option value= "{{v}}"D>{{v}}</option>
+
+                    {% endfor %}
+
+                  </select><span style="color:red"> * </span>
+
+                  <select id="phonetic" name="phonetics" placeholder="Choose a Language" required="required">
+                    {% for l in languages %}
+
+                      <option value= "{{l}}"D>{{l}}</option>
+
+                    {% endfor %}
+
+                  </select><span style="color:red"> * </span>
+
+
+                  <textarea id="text" name="text" rows="4" cols="50" placeholder="Type your text here...">{{text}}</textarea>
+
+
+                  <input type="hidden" name="fileslist" value="{% for af in audiofiles %};{{af}}{% endfor %}" />
+                  <button type="submit" id="synthesize" name="synthesizebutton" class="btn">Synthesize</button>
+
+                </div>
+
+                </form>
+                <br>
+            </div>
+        </div>
+
+        <script src="../js/voicer.js"></script>
+
+    </body>
+</html>

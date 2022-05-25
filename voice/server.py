@@ -1,5 +1,5 @@
 '''
-An (in)audible Chorus
+An (in)audible Chorus :: Voicing
 CTM Festival 2022
 
 (c) J Chaim Reus 2022
@@ -21,7 +21,7 @@ from datetime import datetime
 app = Flask(__name__)
 
 # Configure and download the pre-trained YourTTS model
-save_folder = Path("/home/jon/Drive/KONTINUUM/chorus/voice/static/outputs/")
+save_folder = Path("/home/jon/Drive/KONTINUUM/chorusworkshop/voice/static/outputs/")
 if not save_folder.exists():
   save_folder.mkdir()
 
@@ -82,8 +82,15 @@ def get_voices():
 print("Found voices:", get_voices())
 
 
+# Serve Static Files
+@app.route("/<path:name>")
+def fetch_static(name):
+    return send_from_directory(
+        "static/", name, as_attachment=False
+    )
+
 @app.route("/outputs/<path:name>")
-def download_file(name):
+def fetch_audiofile(name):
     print("Sending:", name)
     return send_from_directory(
         "static/outputs/", name, as_attachment=True
@@ -93,19 +100,31 @@ def download_file(name):
 def home():
     return render_template('index.html', voices=get_voices(), languages=available_languages)
 
+
+@app.route('/test/')
+def test():
+    return render_template('test.html')
+
 #Set a post method to yield predictions on page
 @app.route('/', methods = ['POST'])
 def predict():
     voice = request.form.get('voice')
     phonetics = request.form.get('phonetics')
     text = request.form.get('text')
+    fileslist = request.form.get('fileslist')
+    if fileslist != "":
+        if fileslist[0] == ';':
+            fileslist=fileslist[1:]
+        audiofiles = fileslist.split(';')
+    else:
+        audiofiles = list()
 
     # TODO: Data validation
     # VOICE EXISTS
     # LANGUAGE EXISTS
     # TEXT IS NOT TOO CRAZY (?)
 
-    print(f"Got voice:{voice}  ph:{phonetics}  txt:{text}")
+    print(f"PREDICT>>> Got voice:{voice}  ph:{phonetics}  txt:{text}  files:{fileslist}")
 
     # Does voiceprint exist?
     speaker_wav = voiceprints_folder.joinpath(f"{voice}.wav")
@@ -147,8 +166,7 @@ def predict():
         vhistory['num'] += 1
         vhistory['outputs'].append(save_path)
 
-        audiofiles = [save_path]
-        audiofiles = [os.path.join('/outputs/', sp.name) for sp in audiofiles]
+        audiofiles.append(os.path.join('/outputs/', save_path.name))
         print("Reply with Audiofiles:", audiofiles)
 
         return render_template('vp.html', message="Success!", audiofiles=audiofiles, voice=voice, text=text, phonetics=phonetics, voices=get_voices(), languages=available_languages)

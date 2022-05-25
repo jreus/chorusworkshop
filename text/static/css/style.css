@@ -9,10 +9,6 @@ form {
     text-align: center;
 }
 
-select {
-  font-size: 1.5rem;
-  height: 2rem;
-}
 
 button {
   font-size: 2rem;
@@ -44,20 +40,6 @@ button:active {
   transform: translateY(2px);
 }
 
-input {
-    padding: 12px 20px;
-    margin: 8px 0;
-    box-sizing: border-box
-}
-
-.Note {
-    text-align: center;
-    margin: 7px;
-    padding: 7px 0px;
-}
-.intro {
-    font-size: 20px;
-}
 
 /*Layout and structure of form body in page*/
 div.container {
@@ -115,14 +97,6 @@ a.link {
     margin-right: 20px;
     margin-left: 115px;
 }
-a.scikit {
-    margin-left: 65px;
-}
-
-ul#horizontal-list li {
-    display: inline;
-}
-
 
 div.title {
   width: 100%;
@@ -143,52 +117,86 @@ div.title h1 {
   font-family: "Copperplate Gothic Light";
 }
 
-
-
-.audioplayers {
+.input-controls {
   width: 100%;
+  grid-template-columns: 33% 33% 33%;
   display: grid;
-  grid-template-columns: auto auto auto auto auto;
-  grid-gap: 5px;
+  grid-gap: 0;
+  padding: 1em 1em 5em 1em;
 }
 
-.player {
-  position: relative;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: gold;
-  border-radius:25px;
-  text-align:center;
-  font-size:3em;
-  padding:3em;
-  margin: 5px;
-}
-
-.player > audio {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-}
-
-.column-form {
-  display: flex;
-  flex-direction: row;
-  vertical-align: top;
+.predictions {
   width: 100%;
-  padding: 10px;
-  gap: 5vw;
+  grid-template-columns: 33% 33% 33%;
+  display: grid;
+  grid-gap: 0;
+  padding: 1em 1em 5em 1em;
 }
 
-.column-form > div {
-  align-items: flex-start;
-  text-align: left;
+.predictions > div {
+  border-left: 2px solid lightblue;
+  border-right: 2px solid lightblue;
+  padding: 1em 1em 1em 1em;
 }
 
-.column-item {
-  margin: 5px;
+select {
+  font-size: 2em;
+}
+
+.slider-number {
+  width: 100%;
+  position: relative;
+}
+
+.slider-number > input[type=number] {
+  font-size: 2em;
+  width: 4em;
+  padding: 0 0 0.3em 0;
+  -moz-appearance: textfield;
+  -webkit-appearance: none;
+  margin: 0;
+  position: absolute;
+  right: -1em;
+  bottom: 0;
+  background: none;
+  border: none;
+}
+
+input[type=range] {
+}
+
+.slider {
+  -webkit-appearance: none;  /* Override default CSS styles */
+  appearance: none;
+  width: 100%; /* Full-width */
+  height: 4em; /* Specified height */
+  background: #d3d3d3; /* Grey background */
+  outline: none; /* Remove outline */
+  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  transition: opacity .2s;
+}
+
+/* Mouse-over effects */
+.slider:hover {
+  opacity: 1; /* Fully shown on mouse-over */
+}
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 25px; /* Set a specific slider handle width */
+  height: 4em; /* Specified height */
+  background: #04AA6D; /* Green background */
+  cursor: pointer; /* Cursor on hover */
+}
+
+.slider::-moz-range-thumb {
+  width: 25px; /* Set a specific slider handle width */
+  height: 4em; /* Specified height */
+  background: #04AA6D; /* Green background */
+  cursor: pointer; /* Cursor on hover */
 }
 
 div {

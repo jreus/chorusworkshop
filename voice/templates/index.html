@@ -1,9 +1,10 @@
-<!---Initialize Home Page--->
 <!DOCTYPE html>
-<html>
+<html lang="en-us">
     <head>
-        <meta charset="UTF-8">
-
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width">
+      <title>An (In)audible Chorus :: Voicing ::</title>
+      <link href="css/style.css" rel="stylesheet" type="text/css">
     </head>
     <body>
         <!---Initialize structure of Title and house picture--->
@@ -19,50 +20,54 @@
 
                 <div class="intro">
                     <b>
-                        <p class = "Note"><b>Note: Enter values which are reasonable to the context</b></p>
                         <p class="Note">{{message}}</p>
                     </b>
                 </div>
 
                 <br>
 
-                <!---Initialize form structure and inputs, set method to "POST"--->
                 <form action="{{url_for('predict')}}" method="post" class="info">
-                  <select id="voice" name="voice" placeholder="Choose a Voice" required="required">
+
+                  <div class="column-form">
+
+                    <div>
+                    <label for="voice">Voice</label>
+                    <br>
+                    <select id="voice" name="voice" placeholder="Choose a Voice" required="required">
                     {% for v in voices %}
 
-                      <option value= "{{v}}"D>{{v}}</option>
+                      <option value="{{v}}">{{v}}</option>
 
                     {% endfor %}
 
-                  </select><span style="color:red"> * </span>
+                    </select>
+                    </div>
 
-                  <br>
-                  <br>
-
-                  <select id="phonetics" name="phonetics" placeholder="Choose a Language" required="required">
+                    <div>
+                    <label for="voice">Language</label>
+                    <br>
+                    <select id="phonetic" name="phonetics" placeholder="Choose a Language" required="required">
                     {% for l in languages %}
 
                       <option value= "{{l}}"D>{{l}}</option>
 
                     {% endfor %}
 
-                  </select><span style="color:red"> * </span>
+                    </select>
+                    </div>
 
-                  <br>
-                  <br>
+                  <textarea id="text" name="text" rows="6" cols="50" placeholder="Type your text here...">{{text}}</textarea>
 
-                  <textarea id="text" name="text" rows="4" cols="50" placeholder="Type your text here...">It took me a while to develop a voice, and now that I've got one. Well. I'm not going to be silent!</textarea>
-                  <br>
-                  <br>
 
-                  <input type="text" id="otherinput" name="Otherinfo" placeholder="Something else..."/>
-                  <br>
-                  <br>
-
+                  <input type="hidden" name="fileslist" value="{% for af in audiofiles %};{{af}}{% endfor %}" />
                   <button type="submit" id="synthesize" name="synthesizebutton" class="btn">Synthesize</button>
+
+                </div>
+
+
+
                 </form>
-                <br>
+
             </div>
         </div>
     </body>
