@@ -5,6 +5,9 @@ outputs
 # Other library git repos
 sources
 
+# Python tmp files
+__pycache__
+*.pyc
 
 
 # Logs
