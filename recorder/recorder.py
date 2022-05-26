@@ -11,6 +11,7 @@ run with: export FLASK_APP=server && export FLASK_ENV=development && flask run
 
 import sys
 import os
+import json
 from pathlib import Path
 import numpy as np
 from flask import Flask, request, redirect, jsonify, render_template, send_from_directory, flash, url_for
@@ -69,11 +70,27 @@ def save_audio():
 
     if audiofile and allowed_file(audiofile.filename):
         print("Audiofile is allowed")
-        names = [request.form.get('name1'), request.form.get('name2')]
-        wishes = [request.form.get('wishes1'), request.form.get('wishes2')]
+        formid = request.form.get('formid')
+        vpname = request.form.get('name')
+        wishes = request.form.get('wishes')
         filename = secure_filename(audiofile.filename)
-        audiofile.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        print(f"SAVING AUDIO>>> Got names:{names}  wishes:{wishes}")
+        audio_filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        audiofile.save(audio_filepath)
+
+        # Create json file
+        metadata = {
+            'filename': filename,
+            'vpname': vpname,
+            'wishes': wishes
+        }
+        json_filename = Path(audio_filepath).stem
+        json_filename =  f"{json_filename}.json"
+        json_filepath = os.path.join(app.config['UPLOAD_FOLDER'], json_filename)
+        with open(json_filepath, 'w') as outfile:
+            json.dump(metadata, outfile)
+
+        print(f"SAVING AUDIO>>> Got form {formid},  voiceprint name:{vpname}  wishes:{wishes}")
+        print(f"       SAVING: {filename} // {json_filename}")
         return "Success"
 
     return "Error"

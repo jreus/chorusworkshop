@@ -1,7 +1,61 @@
+// Populate Voice Info
+function voiceSelected(e) {
+  let selected = voice.options[voice.selectedIndex];
+  console.log("Selected:", selected.value, selected.text);
+  console.log(" MetaData:", voicedata[selected.value]);
+  voiceinfo.innerHTML = voicedata[selected.value]['wishes'];
+}
+voice.addEventListener('change', voiceSelected);
+voiceSelected(); // refresh wishes list
+
+
+function refreshData(e) {
+  // Ask the server to give the latest voice data, then populate it here...
+  let request = new XMLHttpRequest();
+
+  request.addEventListener('load', ()=>{
+    let response = request.response;
+    try {
+      let json = JSON.parse(response);
+      console.log("Got json", json);
+
+      // Clear current voices / select list
+      voicedata = {};
+      allvoices = [];
+      while (voice.options.length > 0) {
+          voice.remove(0);
+      }
+
+      // Iterate through json...
+      // repopulate allvoices & voicedata while repopulating select list
+      for (const [voiceid, metadata] of Object.entries(json)) {
+        console.log(voiceid, metadata);
+        voicedata[voiceid] = metadata;
+        allvoices.push(voiceid);
+        opt = document.createElement('option');
+        opt.value = voiceid;
+        opt.text = metadata['vpname'];
+        voice.appendChild(opt);
+      }
+
+      voiceSelected(); // refresh wishes list
+
+    } catch(e) {
+      console.log("Error", e);
+      console.log("Server Error: " + response);
+    };
+  });
+
+  let formData = new FormData();
+  formData.append('command', 'voiceData');
+  request.open("POST", "/getdata");
+  request.send(formData);
+}
+refreshButton.addEventListener('click', refreshData);
+
+
 var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
 let audioplayerDivs = document.querySelectorAll('.player');
-
 audioplayerDivs.forEach((apd)=>{
   // TODO: add ontouchstart / ontouchend event handlers?
   apd.onmousedown = function(e) {
@@ -23,8 +77,8 @@ audioplayerDivs.forEach((apd)=>{
   };
 });
 
-document.addEventListener('keydown', keyPressed);
-document.addEventListener('keyup', keyReleased);
+
+
 
 let pressedKeys = [];
 
@@ -57,3 +111,6 @@ function keyReleased(e) {
     }
   }
 }
+
+document.addEventListener('keydown', keyPressed);
+document.addEventListener('keyup', keyReleased);

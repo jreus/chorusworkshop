@@ -10,6 +10,7 @@ form {
 }
 
 
+
 button {
   font-size: 2rem;
   background: gold;
@@ -119,24 +120,56 @@ div.title h1 {
 
 .input-controls {
   width: 100%;
-  grid-template-columns: 33% 33% 33%;
-  display: grid;
-  grid-gap: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   padding: 1em 1em 5em 1em;
 }
 
+
+.column {
+}
+
+.textcolumn {
+  min-width: 40vw;
+}
+
+.textcolumn > textarea {
+  width: 100%;
+}
+
+.controlscolumn {
+  min-width: 30vw;
+}
+
+.generatecolumn {
+  min-width: 10vw;
+  margin-right: 30px;
+}
+
+.label {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  width: 100%;
+}
+
+
 .predictions {
   width: 100%;
-  grid-template-columns: 33% 33% 33%;
-  display: grid;
-  grid-gap: 0;
-  padding: 1em 1em 5em 1em;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0;
 }
 
 .predictions > div {
   border-left: 2px solid lightblue;
   border-right: 2px solid lightblue;
-  padding: 1em 1em 1em 1em;
+  padding: 0 1em 0 1em;
+  margin: 0.25em;
+  min-width: 20vw;
+  max-width: 90vw;
 }
 
 select {
@@ -202,6 +235,19 @@ input[type=range] {
 div {
   font-weight:700;
 }
+
+footer {
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  background-color: rgba(150,150,255,1.0);
+}
+
+footer > p {
+  margin: 1em;
+}
+
 
 /*Animation for links*/
 a:link {color:blue}

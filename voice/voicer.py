@@ -9,6 +9,7 @@ run with: export FLASK_APP=server && export FLASK_ENV=development && flask run
 
 import sys
 import os
+import json
 from pathlib import Path
 from TTS.utils.manage import ModelManager
 from TTS.utils.synthesizer import Synthesizer
@@ -17,13 +18,22 @@ from flask import Flask, request, jsonify, render_template, send_from_directory
 from datetime import datetime
 
 
+SERVE_PORT=5000
+SERVE_HOST='0.0.0.0'
+SERVE_DEBUG=True
+
+RENDER_FOLDER = Path("/home/jon/Drive/KONTINUUM/chorusworkshop/voice/static/outputs/")
+if not RENDER_FOLDER.exists():
+  RENDER_FOLDER.mkdir()
+
+VOICEPRINTS_FOLDER = Path("/home/jon/Drive/KONTINUUM/chorusworkshop/recorder/static/uploads/")
+if not VOICEPRINTS_FOLDER.exists():
+    VOICEPRINTS_FOLDER.mkdir()
+
 
 app = Flask(__name__)
 
 # Configure and download the pre-trained YourTTS model
-save_folder = Path("/home/jon/Drive/KONTINUUM/chorusworkshop/voice/static/outputs/")
-if not save_folder.exists():
-  save_folder.mkdir()
 
 # Path to TTS models.json use default...
 #path = Path("/usr/local/lib/python3.7/dist-packages/TTS/.models.json")
@@ -67,19 +77,32 @@ if synth.tts_model.language_manager is not None:
 
 history = dict()
 available_languages = synth.tts_model.language_manager.ids.keys()
-voiceprints_folder = Path("vp")
-if not voiceprints_folder.exists():
-    voiceprints_folder.mkdir()
 
-
-def get_voices():
-    print("Voiceprint Folder is", voiceprints_folder)
-    vps = voiceprints_folder.glob('*.wav')
+def get_voicedata():
+    '''
+    Get a dictionary of voice_name->voice_metadata - sort alphabetically
+    '''
+    print("Voiceprint Folder is", VOICEPRINTS_FOLDER)
+    vps = VOICEPRINTS_FOLDER.glob('*.wav')
     voices = [v.stem for v in vps]
-    print("Get Voices", voices)
-    return voices
+    voicedata = dict()
+    for voice in voices: # We should have a metadata file for each voice.. if not fill metadata with nothing...
+        mdpath = VOICEPRINTS_FOLDER.joinpath(f"{voice}.json")
+        metadata = { 'filename': None, 'vpname': voice, 'wishes': '' }
+        if mdpath.exists():
+            # All good!
+            with open(mdpath) as json_file:
+                metadata = json.load(json_file)
+        voicedata[voice] = metadata
 
-print("Found voices:", get_voices())
+
+    voicedata = dict(sorted(voicedata.items()))
+    print("Got Voices", voicedata.keys())
+    print("Data:", voicedata)
+
+    return voicedata
+
+print("Found voices:", get_voicedata().keys())
 
 
 # Serve Static Files
@@ -98,12 +121,20 @@ def fetch_audiofile(name):
 #create our "home" route using the "index.html" page
 @app.route('/')
 def home():
-    return render_template('index.html', voices=get_voices(), languages=available_languages)
+    return render_template('index.html', voicedata=get_voicedata(), languages=available_languages)
 
 
-@app.route('/test/')
-def test():
-    return render_template('test.html')
+# Request for updated app data and metadata
+@app.route('/getdata', methods = ['POST'])
+def getdata():
+    command = request.form.get('command')
+    print(f"Got command {command}")
+
+    if command == 'voiceData':
+        return get_voicedata()
+
+    return f"Unknown command {command}"
+
 
 #Set a post method to yield predictions on page
 @app.route('/', methods = ['POST'])
@@ -127,7 +158,7 @@ def predict():
     print(f"PREDICT>>> Got voice:{voice}  ph:{phonetics}  txt:{text}  files:{fileslist}")
 
     # Does voiceprint exist?
-    speaker_wav = voiceprints_folder.joinpath(f"{voice}.wav")
+    speaker_wav = VOICEPRINTS_FOLDER.joinpath(f"{voice}.wav")
     if speaker_wav.exists():
         # If yes, do synthesis...
 
@@ -140,7 +171,7 @@ def predict():
         # Unique file name for synthesized output...
         timestamp = datetime.now().strftime("%H_%M_%S")
         save_filename = f"{timestamp}_{voice}_{vhistory['num']:03d}.wav"
-        save_path = save_folder.joinpath(save_filename)
+        save_path = RENDER_FOLDER.joinpath(save_filename)
 
         language_name = phonetics
         speaker_name = None
@@ -169,11 +200,11 @@ def predict():
         audiofiles.append(os.path.join('/outputs/', save_path.name))
         print("Reply with Audiofiles:", audiofiles)
 
-        return render_template('vp.html', message="Success!", audiofiles=audiofiles, voice=voice, text=text, phonetics=phonetics, voices=get_voices(), languages=available_languages)
+        return render_template('index.html', message="Synthesis Success!", audiofiles=audiofiles, voice=voice, text=text, phonetics=phonetics, voicedata=get_voicedata(), languages=available_languages)
     else:
         # If no, return an error...
         print(f"ERROR! No voiceprint {voice} found!")
         return render_template('index.html', message=f"Sorry! No voiceprint {voice} exists!")
 
 if __name__ == '__main__':
-    app.run(port=5000, host='0.0.0.0', debug=True)
+    app.run(port=SERVE_PORT, host=SERVE_HOST, debug=SERVE_DEBUG)

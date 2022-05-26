@@ -30,22 +30,34 @@
 
                   <div class="input-controls">
 
-                    <div>
-                      <label for="prompt">Type a text prompt:</label>
+                    <div class="textcolumn">
+                      <div class="label">
+                      <label class="label" for="prompt">Type your text prompt:</label>
+                      </div>
                       <textarea id="prompt" name="prompt" rows="10" cols="50" placeholder="Type your text prompt...">{{ last_prompt }}</textarea>
                     </div>
 
-                    <div>
+                    <div class="controlscolumn">
+                      <div class="label">
                       <label for="temperature">Text randomness:</label>
-                      <br>
+                      </div>
                       <div class="slider-number">
                         <input type="range" min="1.0" max="100.0" step="1" class="slider" id="temperatureSlider" />
                         <input type="number" value={{ temperature }} name="temperature" id="temperatureNumber" />
                       </div>
+                      <br>
+                      <div class="label">
+                      <label for="num_predictions">Variations:</label>
+                      <br><br>
+                      <select id="numpredictionsDropdown" name="num_predictions"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+                      </div>
+
+
                     </div>
 
-                    <div>
-                    <button type="submit" id="continue" name="continuebutton" class="btn">Generate</button>
+                    <div class="generatecolumn">
+                      <br><br>
+                      <button type="submit" id="continue" name="generatebutton" class="btn">Generate</button>
                     </div>
 
                   </div>
@@ -73,7 +85,17 @@
             </div>
         </div>
 
+        <script>
+          let num_predictions_selected = {{ num_predictions }};
+          numpredictionsDropdown.selectedIndex = num_predictions_selected - 1;
+        </script>
         <script src="js/texter.js"></script>
+
+        <footer>
+          <p><a href="https://ahnen.in/" target="_blank">In Search of Good Ancestors / Ahnen in Arbeit</a></p>
+          <p><a href="http://varia.zone/" target="_blank">Varia</a></p>
+          <p><a href="https://huggingface.co/" target="_blank">huggingface.co</a></p>
+        </footer>
 
     </body>
 </html>

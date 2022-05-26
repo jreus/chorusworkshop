@@ -20,12 +20,13 @@
         </header>
 
         <form id="form1" name="form1" action="{{url_for('save_audio')}}" method="post" class="info" enctype="multipart/form-data">
-            <label for="name1">Your name / Name of your Voiceprint</label>
-            <input type="text" id="name1" name="name1" placeholder="Type your name / the name of your voiceprint" value="{{ names[0] }}" />
+            <input type="hidden" name="formid" value="1" />
+            <label for="name">Your name / Name of your Voiceprint</label>
+            <input type="text" id="name1" name="name" placeholder="Type your name / the name of your voiceprint" value="{{ names[0] }}" />
             <br>
             <br>
-            <label for="wishes1">A list of wishes you have for how your voice will be used in the future.</label>
-            <textarea id="wishes1" name="wishes1" rows="4" cols="50" placeholder="Type a list of wishes for how your voice should speak and where it should be used.">{{ wishes[0] }}</textarea>
+            <label for="wishes">A list of wishes you have for how your voice will be used in the future.</label>
+            <textarea id="wishes1" name="wishes" rows="4" cols="50" placeholder="Type a list of wishes for how your voice should speak and where it should be used.">{{ wishes[0] }}</textarea>
             <br>
             <br>
 
@@ -33,7 +34,7 @@
         <button id="record1" class="record">Record</button>
         <button id="stop1" class="stop">Stop</button>
         <section id="soundclips1" class="sound-clips"></section>
-        <button type="submit" id="lsubmit" name="lsubmitbutton" class="btn">Save Recording</button>
+        <button type="submit" id="lsubmit" name="submitbutton" class="btn">Save Recording</button>
       </form>
 
 
@@ -50,12 +51,13 @@
 
 
         <form id="form2" name="form2" action="{{url_for('save_audio')}}" method="post" class="info" enctype="multipart/form-data">
-            <label for="name2">Your name / Name of your Voiceprint</label>
-            <input type="text" id="name2" name="name2" placeholder="Type your name / the name of your voiceprint" value="{{ names[1] }}" />
+            <input type="hidden" name="formid" value="2" />
+            <label for="name">Your name / Name of your Voiceprint</label>
+            <input type="text" id="name2" name="name" placeholder="Type your name / the name of your voiceprint" value="{{ names[1] }}" />
             <br>
             <br>
-            <label for="wishes2">A list of wishes you have for how your voice will be used in the future.</label>
-            <textarea id="wishes2" name="wishes2" rows="4" cols="50" placeholder="Type a list of wishes for how your voice should speak and where it should be used.">{{ wishes[1] }}</textarea>
+            <label for="wishes">A list of wishes you have for how your voice will be used in the future.</label>
+            <textarea id="wishes2" name="wishes" rows="4" cols="50" placeholder="Type a list of wishes for how your voice should speak and where it should be used.">{{ wishes[1] }}</textarea>
             <br>
             <br>
 
@@ -64,7 +66,7 @@
         <button id="record2" class="record">Record</button>
         <button id="stop2" class="stop">Stop</button>
         <section id="soundclips2" class="sound-clips"></section>
-        <button type="submit" id="rsubmit" name="rsubmitbutton" class="btn">Save Recording</button>
+        <button type="submit" id="rsubmit" name="submitbutton" class="btn">Save Recording</button>
 
         </form>
 
@@ -85,7 +87,7 @@
     </aside>
 
     <script src="js/opusrecorder/recorder.min.js"></script>
-    <script src="js/app.js"></script>
+    <script src="js/voiceprinter.js"></script>
 
   </body>
 </html>

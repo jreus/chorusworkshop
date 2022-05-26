@@ -14,6 +14,13 @@ select {
   height: 2rem;
 }
 
+.flexlabel {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
 button {
   font-size: 2rem;
   background: gold;
@@ -23,6 +30,12 @@ button {
   transition: all 0.2s;
   padding: 1rem;
   border-radius:5px;
+}
+
+button.btn-sm {
+  font-size: 1rem;
+  padding: 0.5rem;
+  background: lightblue;
 }
 
 button.record {
@@ -57,6 +70,13 @@ input {
 }
 .intro {
     font-size: 20px;
+}
+
+.voiceinfo {
+  text-align: left;
+  padding: 10px 0px;
+  font-size: 1em;
+  font-family: monospace;
 }
 
 /*Layout and structure of form body in page*/
@@ -176,16 +196,35 @@ div.title h1 {
 .column-form {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   vertical-align: top;
   width: 100%;
   padding: 10px;
-  gap: 5vw;
 }
 
 .column-form > div {
-  align-items: flex-start;
   text-align: left;
+  width: 100%;
+  margin: 20px;
 }
+
+#textdiv {
+  min-width: 40vw;
+}
+
+#textdiv > textarea {
+  width: 100%;
+}
+
+#voicediv {
+  min-width: 20vw;
+  max-width: 40vw;
+}
+
+#voicediv > select {
+  width: 100%;
+}
+
 
 .column-item {
   margin: 5px;

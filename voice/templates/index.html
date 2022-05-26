@@ -1,15 +1,16 @@
+<!---Initialize Home Page--->
 <!DOCTYPE html>
 <html lang="en-us">
     <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width">
-      <title>An (In)audible Chorus :: Voicing ::</title>
-      <link href="css/style.css" rel="stylesheet" type="text/css">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>An (In)audible Chorus :: Repetitions ::</title>
+        <link href="css/style.css" rel="stylesheet" type="text/css">
     </head>
     <body>
         <!---Initialize structure of Title and house picture--->
         <div class = "title">
-            <h1>An (In)audible Chorus :: Voicing ::</h1>
+            <h1>An (In)audible Chorus :: Playback ::</h1>
         </div>
 
         <!---Containerize main page for styling--->
@@ -24,28 +25,58 @@
                     </b>
                 </div>
 
-                <br>
+              <div class="audioplayers">
+                {% for af in audiofiles %}
+                <div class="player">{{ loop.index }}
+                  <audio controls>
+                      <source src="{{af}}" type="audio/wav">
+                        Your browser does not support the audio tag.
+                  </audio>
+                </div>
+                {% endfor %}
+              </div>
 
+                <br />
+
+
+                <!---Initialize form structure and inputs, set method to "POST"--->
                 <form action="{{url_for('predict')}}" method="post" class="info">
 
                   <div class="column-form">
 
-                    <div>
-                    <label for="voice">Voice</label>
-                    <br>
-                    <select id="voice" name="voice" placeholder="Choose a Voice" required="required">
-                    {% for v in voices %}
+                    <div id="textdiv">
+                    <textarea id="text" name="text" rows="6" cols="50" placeholder="Type your text here...">{{text}}</textarea>
+                    </div>
 
-                      <option value="{{v}}">{{v}}</option>
+                    <div id="voicediv">
+                      <div class="flexlabel">
+                        <label for="voice">Voiceprint</label>
+                        <button id="refreshButton" type="button" name="refresh" class="btn-sm">refresh voices</button>
+                      </div>
 
-                    {% endfor %}
+                    <select id="voice" name="voice" placeholder="Choose a Voice" required="required"></select>
 
-                    </select>
+                    <script>
+                      let voicedata = {};
+                      let allvoices = [];
+                      let opt;
+                      {% for v, vd in voicedata.items() %}
+                      voicedata['{{ v }}'] = { 'vpname': "{{ vd['vpname'] }}", 'wishes': "{{ vd['wishes'] }}" };
+                      allvoices.push('{{ v }}');
+                      opt = document.createElement('option');
+                      opt.value = '{{ v }}';
+                      //opt.innerHTML = "{{ vd['vpname'] }}";
+                      opt.text = "{{ vd['vpname'] }}";
+                      voice.appendChild(opt);
+                      {% endfor %}
+                    </script>
+
+                    <div id="voiceinfo" class="voiceinfo"></div>
                     </div>
 
                     <div>
-                    <label for="voice">Language</label>
-                    <br>
+                    <label for="phonetics">Language</label>
+                    <br><br>
                     <select id="phonetic" name="phonetics" placeholder="Choose a Language" required="required">
                     {% for l in languages %}
 
@@ -56,19 +87,27 @@
                     </select>
                     </div>
 
-                  <textarea id="text" name="text" rows="6" cols="50" placeholder="Type your text here...">{{text}}</textarea>
-
-
-                  <input type="hidden" name="fileslist" value="{% for af in audiofiles %};{{af}}{% endfor %}" />
-                  <button type="submit" id="synthesize" name="synthesizebutton" class="btn">Synthesize</button>
+                    <div>
+                    <input type="hidden" name="fileslist" value="{% for af in audiofiles %};{{af}}{% endfor %}" />
+                    <button type="submit" id="synthesize" name="synthesizebutton" class="btn">Synthesize</button>
+                    </div>
 
                 </div>
 
 
 
                 </form>
+                <br />
 
             </div>
         </div>
+
+        <footer>
+          <p><a href="https://ahnen.in/" target="_blank">In Search of Good Ancestors / Ahnen in Arbeit</a></p>
+          <p><a href="http://varia.zone/" target="_blank">Varia</a></p>
+          <p><a href="https://coqui.ai/" target="_blank">coqui.AI</a></p>
+        </footer>
+
+        <script src="/js/voicer.js"></script>
     </body>
 </html>
