@@ -61,7 +61,7 @@
                       let allvoices = [];
                       let opt;
                       {% for v, vd in voicedata.items() %}
-                      voicedata['{{ v }}'] = { 'vpname': "{{ vd['vpname'] }}", 'wishes': "{{ vd['wishes'] }}" };
+                      voicedata['{{ v }}'] = { 'vpname': "{{ vd['vpname'] }}", 'wishes': "{{ vd['wishes'] }}", 'transcript': "{{ vd['transcript']}}", 'speaker': "{{ vd['speaker']}}" };
                       allvoices.push('{{ v }}');
                       opt = document.createElement('option');
                       opt.value = '{{ v }}';
@@ -102,11 +102,16 @@
             </div>
         </div>
 
-        <footer>
+        <!-- footer>
           <p><a href="https://ahnen.in/" target="_blank">In Search of Good Ancestors / Ahnen in Arbeit</a></p>
           <p><a href="http://varia.zone/" target="_blank">Varia</a></p>
           <p><a href="https://coqui.ai/" target="_blank">coqui.AI</a></p>
+        </footer -->
+
+        <footer>
+          <p>~~ perfocraZe International Artist Residency [pIAR] emergency call ~~ <a href="http://support.perfocraze.art/" target="_blank">click here</a> to donate and support threatened LGBT+ performing artists in Ghana</p>
         </footer>
+
 
         <script src="/js/voicer.js"></script>
     </body>

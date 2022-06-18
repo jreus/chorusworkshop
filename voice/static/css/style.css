@@ -234,6 +234,19 @@ div {
   font-weight:700;
 }
 
+footer {
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  background-color: rgba(150,150,255,1.0);
+}
+
+footer > p {
+  margin: 1em;
+}
+
+
 /*Animation for links*/
 a:link {color:blue}
 a:visited {color:black}

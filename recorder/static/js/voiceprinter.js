@@ -196,10 +196,14 @@ if (navigator.mediaDevices.getUserMedia) {
 
 
         let clipName = nameInput.value;
+        let wishesText = wishInput.value;
         if(clipName == '') {
           //clipName = new Date().toISOString() + ".wav";
           clipName = "MyVoiceprint"
-          clipName = prompt('Enter a name for your voiceprint?', clipName);
+          clipName = prompt('Enter a memorable name for your voiceprint', clipName);
+          nameInput.value = clipName;
+          wishesText = prompt('Enter your future wishes for your voice', wishesText);
+          wishInput.value = wishesText;
         }
         clipName = clipName + '.wav';
 

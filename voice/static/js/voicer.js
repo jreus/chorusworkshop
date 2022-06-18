@@ -3,7 +3,12 @@ function voiceSelected(e) {
   let selected = voice.options[voice.selectedIndex];
   console.log("Selected:", selected.value, selected.text);
   console.log(" MetaData:", voicedata[selected.value]);
-  voiceinfo.innerHTML = voicedata[selected.value]['wishes'];
+  let infotext;
+  infotext = voicedata[selected.value]['wishes'];
+  if(infotext == '') {
+    infotext = voicedata[selected.value]['transcript'];
+  }
+  voiceinfo.innerHTML = infotext;
 }
 voice.addEventListener('change', voiceSelected);
 voiceSelected(); // refresh wishes list

@@ -88,7 +88,7 @@ def get_voicedata():
     voicedata = dict()
     for voice in voices: # We should have a metadata file for each voice.. if not fill metadata with nothing...
         mdpath = VOICEPRINTS_FOLDER.joinpath(f"{voice}.json")
-        metadata = { 'filename': None, 'vpname': voice, 'wishes': '' }
+        metadata = { 'filename': '', 'vpname': voice, 'wishes': '', 'speaker': '', 'transcript': '' }
         if mdpath.exists():
             # All good!
             with open(mdpath) as json_file:

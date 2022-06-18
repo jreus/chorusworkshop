@@ -20,6 +20,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 
+SERVE_HOST = '0.0.0.0'
 UPLOAD_FOLDER = "/home/jon/Drive/KONTINUUM/chorusworkshop/recorder/static/uploads"
 ALLOWED_EXTENSIONS = {'wav', 'mp3', 'webm'}
 MAX_UPLOAD_SIZE = 100 * 1000 * 1000 # 100 MB max filesize
@@ -48,7 +49,8 @@ def opusdemo():
 #create our "home" route using the "index.html" page
 @app.route('/', methods = ['GET'])
 def home():
-    return render_template('index.html', names=["The Voice of Authority","The Voice of Reason"], wishes=["I love you...","What is love?"], message="Test Message..")
+    #return render_template('index.html', names=["The Voice of Authority","The Voice of Reason"], wishes=["I love you...","What is love?"], message="Test Message..")
+    return render_template('index.html', names=["",""], wishes=["",""], message="")
 
 
 # Set a post method to save audio files
@@ -73,6 +75,8 @@ def save_audio():
         formid = request.form.get('formid')
         vpname = request.form.get('name')
         wishes = request.form.get('wishes')
+        transcript = request.form.get('transcript')
+        speaker = request.form.get('speaker')
         filename = secure_filename(audiofile.filename)
         audio_filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         audiofile.save(audio_filepath)
@@ -81,7 +85,9 @@ def save_audio():
         metadata = {
             'filename': filename,
             'vpname': vpname,
-            'wishes': wishes
+            'wishes': wishes,
+            'transcript': transcript,
+            'speaker': speaker
         }
         json_filename = Path(audio_filepath).stem
         json_filename =  f"{json_filename}.json"
@@ -97,4 +103,4 @@ def save_audio():
 
 
 if __name__ == '__main__':
-    app.run(port=3000, debug=True, ssl_context='adhoc')
+    app.run(port=3000, debug=True, host=SERVE_HOST, ssl_context='adhoc')
