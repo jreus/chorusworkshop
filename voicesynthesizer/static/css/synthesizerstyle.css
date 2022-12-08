@@ -1,13 +1,134 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  background: url('/img/ahnen-1.jpg');
+  background-size: cover;
+}
+
 body {
-    background-color: black;
-    background-size: cover;
-    color: lightblue;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 0.8rem;
+
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 0.8rem;
 }
-form {
-    text-align: center;
+
+h1, h2 {
+  width: 100%;
+  letter-spacing: 2rem;
+  font-size: 3rem;
+  text-align: center;
+  font-weight: normal;
+  padding: 0 0 0 0;
+  margin: 0.5rem 0;
+  color: pink;
+  font-weight: bold;
+
 }
+
+p {
+  font-size: 1.2rem;
+  color: white;
+  font-weight: bold;
+
+}
+
+.gradient-glow {
+  background: linear-gradient(160deg, #FFFFFF, #FF2222, #FF0000, #0088CC, #FF0000, #FFFFFF);
+  background-size: 200% auto;
+  color: #000;
+  background-clip: text;
+  text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  animation: shine 5s linear infinite;
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+
+section, article {
+  display: block;
+}
+
+#wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+}
+
+#formfields {
+  font-size: 1rem;
+  height: 100%;
+  padding: 5vh 5vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#left-column {
+  flex-direction: column;
+  justify-content: flex-start;
+  min-width: 40vw;
+  background: black;
+}
+
+#middle-column {
+  min-width: 1vw;
+}
+
+#right-column {
+  max-width: 60vw;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+#annotations {
+  min-width: 50vw;
+  min-height: 30vh;
+  font-size: 1.2rem;
+  margin: 1vh 0px;
+}
+
+#wishes {
+  min-width: 50vw;
+  min-height: 30vh;
+  font-size: 1.2rem;
+  margin: 1vh 0px;
+}
+
+#submitbutton {
+  margin: 1vh 0px;
+  width: 100%;
+  border-radius: 10rem;
+}
+
+input {
+  font-size: 1.6em;
+  margin: 1vh 0;
+  width: 100%;
+}
+
+
+.textbox {
+  min-height: 3rem;
+  width: 100%;
+  background-color: rgba(255,255,255,0.6);
+  border-radius: 4rem;
+  border: 2px solid black;
+  padding: 1rem 2rem;
+}
+
+
 
 select {
   font-size: 1.5rem;
@@ -38,15 +159,6 @@ button.btn-sm {
   background: lightblue;
 }
 
-button.record {
-  background: #996666;
-}
-
-button.record:hover, button.record:focus {
-  box-shadow: inset 0px 0px 10px rgba(255, 255, 255, 1);
-  background: #ee1111;
-}
-
 button:hover, button:focus {
   box-shadow: inset 0px 0px 10px rgba(255, 255, 255, 1);
   background: #0ae;
@@ -68,6 +180,7 @@ input {
     margin: 7px;
     padding: 7px 0px;
 }
+
 .intro {
     font-size: 20px;
 }
@@ -77,24 +190,6 @@ input {
   padding: 10px 0px;
   font-size: 1em;
   font-family: monospace;
-}
-
-/*Layout and structure of form body in page*/
-div.container {
-    background-color: rgba(0,0,0,0.5);
-    font-size: 18px;
-    margin: 1%;
-    border-radius: 10px;
-    border: 1px soid rgba)255,255,255,0.3);
-    box-shadow: 2px 2px 15px
-
-}
-div.page {
-    width: 400px;
-    margin: 100px auto 0px auto;
-}
-form.info {
-    margin: 15px;
 }
 
 /*Design of links/buttons*/
@@ -110,15 +205,6 @@ a.link {
     border-style: ridge;
 }
 
-/*Responsible for shadow backgrounds*/
-#menu-outer {
-    height: 70px;
-    background-color: rgba(0,0,0,0.5);
-    font-size: 18px;
-    margin: 1%;
-    border-radius: 10px;
-    border: 1px soid rgba)255,255,255,0.3);
-}
 .table {
     display: table;
     margin: 0 auto;
@@ -144,32 +230,11 @@ ul#horizontal-list li {
 }
 
 
-div.title {
-  width: 100%;
-  margin: auto;
-}
-
-div.title img {
-    display: inline-block;
-    vertical-align:middle;
-}
-
-div.title h1 {
-  width: 100%;
-  font-size: 2em;
-  text-align: center;
-  display:inline-block;
-  vertical-align:middle;
-  font-family: "Copperplate Gothic Light";
-}
-
-
 
 .audioplayers {
-  width: 100%;
   display: grid;
-  grid-template-columns: auto auto auto auto auto;
-  grid-gap: 5px;
+  grid-template-columns: auto auto auto;
+  grid-gap: 2px;
 }
 
 .player {
@@ -179,11 +244,12 @@ div.title h1 {
   left: 0;
   right: 0;
   background: gold;
-  border-radius:25px;
+  border-radius: 25px;
   text-align:center;
-  font-size:3em;
-  padding:3em;
+  font-size: 2em;
+  padding: 1em 4em 2em 3.5em;
   margin: 5px;
+  width: 4vw;
 }
 
 .player > audio {
@@ -193,20 +259,6 @@ div.title h1 {
     width: 100%;
 }
 
-.column-form {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  vertical-align: top;
-  width: 100%;
-  padding: 10px;
-}
-
-.column-form > div {
-  text-align: left;
-  width: 100%;
-  margin: 20px;
-}
 
 #textdiv {
   min-width: 40vw;
@@ -225,7 +277,6 @@ div.title h1 {
   width: 100%;
 }
 
-
 .column-item {
   margin: 5px;
 }
@@ -235,11 +286,15 @@ div {
 }
 
 footer {
-  margin: auto;
+  position: absolute;
+  margin: 0;
+  width: 100%;
+
   display: flex;
   flex-direction: row;
   justify-content: center;
   background-color: rgba(150,150,255,1.0);
+  bottom: 0;
 }
 
 footer > p {

@@ -1,12 +1,14 @@
 '''
-An (in)audible Chorus :: VoicePrinting
-CTM Festival 2022
+In Search of Good Ancestors / Ahnen in Arbeit
+
+Uploader. A simple web interface for uploading audio voice recordings and
+linked annotations / future wishes to a shared local webserver.
 
 (c) J Chaim Reus 2022
 
-Record and upload voice for use as voiceprints in synthesis.
+Upload voice recordings and annotations/wishes to the local repository.
 
-run with: export FLASK_APP=server && export FLASK_ENV=development && flask run
+run with `python uploader/uploader.py`
 '''
 
 import sys
@@ -19,13 +21,15 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 
 app = Flask(__name__)
+app.secret_key = "My Secret key"
 
 SERVE_HOST = '0.0.0.0'
-UPLOAD_FOLDER = "/home/jon/Drive/KONTINUUM/chorusworkshop/recorder/static/uploads"
-ALLOWED_EXTENSIONS = {'wav', 'mp3', 'webm'}
+UPLOAD_FOLDER = "/home/jon/Dev/Ahnen/chorusworkshop/uploader/static/uploads"
 MAX_UPLOAD_SIZE = 100 * 1000 * 1000 # 100 MB max filesize
 app.config['MAX_CONTENT_LENGTH'] = MAX_UPLOAD_SIZE
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+ALLOWED_EXTENSIONS = {'wav', 'mp3', 'webm'}
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -45,57 +49,54 @@ def wademo():
 def opusdemo():
     return render_template('opusrecorder-demo.html', names=["",""], wishes=["",""], message="")
 
-
 #create our "home" route using the "index.html" page
 @app.route('/', methods = ['GET'])
 def home():
     #return render_template('index.html', names=["The Voice of Authority","The Voice of Reason"], wishes=["I love you...","What is love?"], message="Test Message..")
-    return render_template('index.html', names=["",""], wishes=["",""], message="")
-
+    return render_template('index.html', name="", annotations="", wishes="", message="")
 
 # Set a post method to save audio files
 @app.route('/', methods = ['POST'])
-def save_audio():
-    print("save_audio() with", request.files)
-
-    if 'file' not in request.files:
+def upload_voice_file():
+    print("upload_voice_file() with form: ", request.form)
+    print("         and files: ", request.files)
+    if 'audiofile' not in request.files:
         flash("No file part")
+        print("Error: No file part")
         return redirect(request.url)
 
-    audiofile = request.files['file']
-
+    audiofile = request.files['audiofile']
     print("We found audiofile", audiofile, "With Filename", audiofile.filename, "Is allowed?", allowed_file(audiofile.filename))
 
     if audiofile.filename == '':
         flash('Unnamed file')
+        print("Error: unnamed audio file!")
         return redirect(request.url)
 
     if audiofile and allowed_file(audiofile.filename):
-        print("Audiofile is allowed")
-        formid = request.form.get('formid')
-        vpname = request.form.get('name')
+        print("Audiofile is good! Checking other fields...")
+        name = request.form.get('name')
+        annotations = request.form.get('annotations')
         wishes = request.form.get('wishes')
         transcript = request.form.get('transcript')
-        speaker = request.form.get('speaker')
         filename = secure_filename(audiofile.filename)
         audio_filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         audiofile.save(audio_filepath)
 
-        # Create json file
+        # Create json metadata / annotations file
         metadata = {
             'filename': filename,
-            'vpname': vpname,
+            'name': name,
+            'annotations': annotations,
             'wishes': wishes,
-            'transcript': transcript,
-            'speaker': speaker
+            'transcript': transcript
         }
         json_filename = Path(audio_filepath).stem
         json_filename =  f"{json_filename}.json"
         json_filepath = os.path.join(app.config['UPLOAD_FOLDER'], json_filename)
         with open(json_filepath, 'w') as outfile:
             json.dump(metadata, outfile)
-
-        print(f"SAVING AUDIO>>> Got form {formid},  voiceprint name:{vpname}  wishes:{wishes}")
+        print(f"SAVING AUDIO>>> name:{name}\n  annotations:{wishes}\n   wishes:{wishes}")
         print(f"       SAVING: {filename} // {json_filename}")
         return "Success"
 

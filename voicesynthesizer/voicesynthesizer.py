@@ -1,5 +1,5 @@
 '''
-In Search of Goo Ancestors
+In Search of Good Ancestors / Ahnen in Arbeit
 Voice Synthesis Server
 
 (c) J Chaim Reus 2022
@@ -85,26 +85,25 @@ def get_voicedata():
     '''
     print("Voiceprint Folder is", VOICEPRINTS_FOLDER)
     vps = VOICEPRINTS_FOLDER.glob('*.wav')
-    voices = [v.stem for v in vps]
+    voicefiles = [v for v in vps]
     voicedata = dict()
-    for voice in voices: # We should have a metadata file for each voice.. if not fill metadata with nothing...
-        mdpath = VOICEPRINTS_FOLDER.joinpath(f"{voice}.json")
-        metadata = { 'filename': '', 'vpname': voice, 'wishes': '', 'speaker': '', 'transcript': '' }
+    for vf in voicefiles: # We should have a metadata file for each voice.. if not fill metadata with nothing...
+        mdpath = VOICEPRINTS_FOLDER.joinpath(f"{vf.stem}.json")
+        # Default
+        metadata = { 'filename': vf.name, 'name': vf.stem, 'annotations': '', 'wishes': '', 'transcript': '' }
         if mdpath.exists():
             # All good!
             with open(mdpath) as json_file:
+                # Replace the default...
                 metadata = json.load(json_file)
-        voicedata[voice] = metadata
-
+        voicedata[metadata['name']] = metadata
 
     voicedata = dict(sorted(voicedata.items()))
     print("Got Voices", voicedata.keys())
     #print("Data:", voicedata)
-
     return voicedata
 
 print("Found voices:", get_voicedata().keys())
-
 
 # Serve Static Files
 @app.route("/<path:name>")
@@ -130,7 +129,6 @@ def home():
 def getdata():
     command = request.form.get('command')
     print(f"Got command {command}")
-
     if command == 'voiceData':
         return get_voicedata()
 
@@ -140,6 +138,7 @@ def getdata():
 #Set a post method to yield predictions on page
 @app.route('/', methods = ['POST'])
 def predict():
+
     voice = request.form.get('voice')
     phonetics = request.form.get('phonetics')
     text = request.form.get('text')
@@ -159,10 +158,11 @@ def predict():
     print(f"PREDICT>>> Got voice:{voice}  ph:{phonetics}  txt:{text}  files:{fileslist}")
 
     # Does voiceprint exist?
-    speaker_wav = VOICEPRINTS_FOLDER.joinpath(f"{voice}.wav")
+    allvoicedata = get_voicedata()
+    voicedata = allvoicedata[voice]
+    speaker_wav = VOICEPRINTS_FOLDER.joinpath(voicedata['filename'])
     if speaker_wav.exists():
         # If yes, do synthesis...
-
         if voice in history:
             vhistory = history[voice]
         else:
@@ -201,7 +201,7 @@ def predict():
         audiofiles.append(os.path.join('/renders/', save_path.name))
         print("Reply with Audiofiles:", audiofiles)
 
-        return render_template('index.html', message="Synthesis Success!", audiofiles=audiofiles, voice=voice, text=text, phonetics=phonetics, voicedata=get_voicedata(), languages=available_languages)
+        return render_template('index.html', message="Synthesis Success!", audiofiles=audiofiles, voice=voice, text=text, phonetics=phonetics, voicedata=allvoicedata, languages=available_languages)
     else:
         # If no, return an error...
         print(f"ERROR! No voiceprint {voice} found!")

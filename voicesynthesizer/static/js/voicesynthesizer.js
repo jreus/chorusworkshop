@@ -1,3 +1,9 @@
+const submitForm = document.querySelector('#synthesisform');
+const textfield = document.querySelector('#text');
+const voice = document.querySelector('#voice');
+const phonetic = document.querySelector('#phonetic');
+const fileslist = document.querySelector('#fileslist');
+
 // Populate Voice Info
 function voiceSelected(e) {
   let selected = voice.options[voice.selectedIndex];
@@ -5,12 +11,13 @@ function voiceSelected(e) {
   console.log("Voice Selected", voice.selectedIndex);
   console.log("Selected:", selected.value, selected.text);
   console.log(" MetaData:", voicedata[selected.value]);
-  let infotext;
-  infotext = voicedata[selected.value]['wishes'];
-  if(infotext == '') {
-    infotext = voicedata[selected.value]['transcript'];
-  }
-  voiceinfo.innerHTML = infotext;
+  let annotationstext;
+  annotationstext = voicedata[selected.value]['annotations'];
+  let wishestext;
+  wishestext = voicedata[selected.value]['wishes'];
+  let transcripttext;
+  transcripttext = voicedata[selected.value]['transcript'];
+  voiceinfo.innerHTML = annotationstext;
 }
 voice.addEventListener('change', voiceSelected);
 voiceSelected(); // refresh wishes list
@@ -19,7 +26,6 @@ voiceSelected(); // refresh wishes list
 function refreshData(e) {
   // Ask the server to give the latest voice data, then populate it here...
   let request = new XMLHttpRequest();
-
   request.addEventListener('load', ()=>{
     let response = request.response;
     try {
@@ -29,6 +35,7 @@ function refreshData(e) {
       // Clear current voices / select list
       voicedata = {};
       allvoices = [];
+
       while (voice.options.length > 0) {
           voice.remove(0);
       }
@@ -41,7 +48,7 @@ function refreshData(e) {
         allvoices.push(voiceid);
         opt = document.createElement('option');
         opt.value = voiceid;
-        opt.text = metadata['vpname'];
+        opt.text = metadata['name'];
         voice.appendChild(opt);
       }
 
@@ -59,7 +66,6 @@ function refreshData(e) {
   request.send(formData);
 }
 refreshButton.addEventListener('click', refreshData);
-
 
 var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 let audioplayerDivs = document.querySelectorAll('.player');
@@ -83,9 +89,6 @@ audioplayerDivs.forEach((apd)=>{
      this.style.background = "gold";
   };
 });
-
-
-
 
 let pressedKeys = [];
 
@@ -121,3 +124,31 @@ function keyReleased(e) {
 
 document.addEventListener('keydown', keyPressed);
 document.addEventListener('keyup', keyReleased);
+
+// Synthesis request submission...
+// submitForm.addEventListener('submit', (e)=>{
+//   // On form submission, prevent default
+//   e.preventDefault();
+//   console.log("Submit!");
+//     let formData = new FormData(submitForm);
+//     // Submit the form via xhr
+//     let request = new XMLHttpRequest();
+//     console.log("Request status:", request.status);
+//     request.addEventListener('load', ()=>{
+//       let response = request.response;
+//       console.log("Got XHR response", request.response);
+//       if(response == 'Success') {
+//         console.log("Request status:", request.status);
+//       } else {
+//         console.log(request);
+//         console.log("Request status:", request.status);
+//       }
+//     });
+//     console.log("Sending Form Data!");
+//     request.open("POST", "/");
+//     request.send(formData);
+//
+// });
+
+window.onresize = function() {}
+window.onresize();

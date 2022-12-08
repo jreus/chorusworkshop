@@ -3,90 +3,48 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>Voiceprinting</title>
-    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <title>Uploading Voice Recording and Future Wishes</title>
+    <link href="css/uploaderstyle.css" rel="stylesheet" type="text/css">
   </head>
   <body>
 
-    <div class="wrapper">
+    <div id="overlay"><h1>uploading ...</h1></div>
 
-      <div id="controls">
+    <div id="wrapper">
 
-      <section id="left-controls" class="controls">
-
-        <header>
-          <h1>Microphone 1</h1>
-        </header>
-
-        <form id="form1" name="form1" action="{{url_for('save_audio')}}" method="post" class="info" enctype="multipart/form-data">
-            <input type="hidden" name="formid" value="1" />
-            <label for="name">Your name / Name of your Voiceprint</label>
-            <input type="text" id="name1" name="name" placeholder="Type your name / the name of your voiceprint" value="{{ names[0] }}" />
-            <br>
-            <br>
-            <label for="wishes">A list of wishes you have for how your voice will be used in the future.</label>
-            <textarea id="wishes1" name="wishes" rows="4" cols="50" placeholder="Type a list of wishes for how your voice should speak and where it should be used.">{{ wishes[0] }}</textarea>
-            <br>
-            <br>
-
-        <canvas id="visualizer1" class="visualizer" height="60px"></canvas>
-        <button id="record1" class="record">Record</button>
-        <button id="stop1" class="stop">Stop</button>
-        <section id="soundclips1" class="sound-clips"></section>
-        <button type="submit" id="lsubmit" name="submitbutton" class="btn">Save Recording</button>
-      </form>
+    <header>
+      <h1 class="gradient-glow">Upload a Voice Recording</h1>
+    </header>
 
 
-      </section>
+    <div id="formfields">
 
-      <section class="center-column" id="log"></section>
+      <form id="uploadform" name="uploadform" action="{{url_for('upload_voice_file')}}" method="post" class="info" enctype="multipart/form-data"></form>
 
-
-      <section class="controls" id="right-controls">
-
-        <header>
-          <h1>Microphone 2</h1>
-        </header>
-
-
-        <form id="form2" name="form2" action="{{url_for('save_audio')}}" method="post" class="info" enctype="multipart/form-data">
-            <input type="hidden" name="formid" value="2" />
-            <label for="name">Your name / Name of your Voiceprint</label>
-            <input type="text" id="name2" name="name" placeholder="Type your name / the name of your voiceprint" value="{{ names[1] }}" />
-            <br>
-            <br>
-            <label for="wishes">A list of wishes you have for how your voice will be used in the future.</label>
-            <textarea id="wishes2" name="wishes" rows="4" cols="50" placeholder="Type a list of wishes for how your voice should speak and where it should be used.">{{ wishes[1] }}</textarea>
-            <br>
-            <br>
-
-
-        <canvas id="visualizer2" class="visualizer" height="60px"></canvas>
-        <button id="record2" class="record">Record</button>
-        <button id="stop2" class="stop">Stop</button>
-        <section id="soundclips2" class="sound-clips"></section>
-        <button type="submit" id="rsubmit" name="submitbutton" class="btn">Save Recording</button>
-
-        </form>
-
-
-
-      </section>
-
+      <p class="gradient-glow" >Your name</p>
+      <input class="textbox" type="text" form="uploadform" id="name" name="name" placeholder="What shall we call you?" value="{{ name }}" />
+      <br/><br/>
+      <div style="margin: 1rem 0">
+      <p class="gradient-glow">Your voice recording (wav, ogg or mp3)</p>
+      <input type="file" id="audiofile" name="audiofile" form="uploadform" />
       </div>
 
+      <p class="gradient-glow">Annotations for your voice recording.</p>
+      <textarea class="textbox" form="uploadform" id="annotations" name="annotations" placeholder="Annotations for your voice recording.">{{ annotations }}</textarea>
+      <br/><br/>
+      <p class="gradient-glow">A list of wishes you have for how your voice will be used in the future.</p>
+      <textarea class="textbox" form="uploadform" id="wishes" name="wishes" placeholder="Type a list of wishes for how your voice should speak and where it should be used.">{{ wishes }}</textarea>
+      <br />
+      <button type="submit" form="uploadform" id="submitbutton" name="submitbutton" class="btn">Upload Recording & Annotations</button>
+
+      <div id="log"></dig>
 
     </div>
+    <!-- End Formfields Container -->
 
-    <label id="checkbox-label" for="toggle">❔</label>
-    <input type="checkbox" id="toggle">
-    <aside>
-      <h2>Information</h2>
-      <p>Built using <a href="https://developer.mozilla.org/en-US/docs/Web/API/Navigator.getUserMedia">getUserMedia</a> and the <a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder_API">MediaRecorder API</a>, which provides an easier way to capture Media streams.</p>
-    </aside>
+  </div>
 
-    <script src="js/opusrecorder/recorder.min.js"></script>
-    <script src="js/voiceprinter.js"></script>
+    <script src="js/upload.js"></script>
 
   </body>
 </html>

@@ -4,103 +4,78 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
-        <title>An (In)audible Chorus :: Repetitions ::</title>
-        <link href="css/style.css" rel="stylesheet" type="text/css">
+        <title>Artificial Voice Instrument</title>
+        <link href="css/synthesizerstyle.css" rel="stylesheet" type="text/css">
     </head>
     <body>
-        <!---Initialize structure of Title and house picture--->
-        <div class = "title">
-            <h1>An (In)audible Chorus :: Playback ::</h1>
+
+      <div id="wrapper">
+
+        <h1>Voice Synthesizer</h1>
+
+        <div class="intro">
+          <b><p class="Note">{{message}}</p></b>
         </div>
+
+        <form id="synthesisform" name="synthesisform" action="{{url_for('predict')}}" method="post" class="info"></form>
+
 
         <!---Containerize main page for styling--->
-        <div class="main">
+        <div id="formfields">
 
-            <!---Containerize paragraph and form for styling--->
-            <div class="container">
+          <section id="left-column">
 
-                <div class="intro">
-                    <b>
-                        <p class="Note">{{message}}</p>
-                    </b>
-                </div>
+            <div class="audioplayers">
+              {% for af in audiofiles %}
+              <div class="player">{{ loop.index }}
+                <audio controls>
+                    <source src="{{af}}" type="audio/wav">
+                      Your browser does not support the audio tag.
+                </audio>
+              </div>
+              {% endfor %}
+            </div>
 
-              <div class="audioplayers">
-                {% for af in audiofiles %}
-                <div class="player">{{ loop.index }}
-                  <audio controls>
-                      <source src="{{af}}" type="audio/wav">
-                        Your browser does not support the audio tag.
-                  </audio>
-                </div>
-                {% endfor %}
+          </section>
+
+
+          <section id="right-column">
+
+            <div id="textdiv">
+            <textarea id="text" name="text" rows="6" cols="50" form="synthesisform" placeholder="Type your text here...">{{text}}</textarea>
+            </div>
+
+            <div id="voicediv">
+              <div class="flexlabel">
+                <label for="voice">Voiceprint</label>
+                <button id="refreshButton" type="button" name="refresh" class="btn-sm">refresh voices</button>
               </div>
 
-                <br />
+            <select id="voice" name="voice" form="synthesisform"  placeholder="Choose a Voice" required="required"></select>
 
-
-                <!---Initialize form structure and inputs, set method to "POST"--->
-                <form action="{{url_for('predict')}}" method="post" class="info">
-
-                  <div class="column-form">
-
-                    <div id="textdiv">
-                    <textarea id="text" name="text" rows="6" cols="50" placeholder="Type your text here...">{{text}}</textarea>
-                    </div>
-
-                    <div id="voicediv">
-                      <div class="flexlabel">
-                        <label for="voice">Voiceprint</label>
-                        <button id="refreshButton" type="button" name="refresh" class="btn-sm">refresh voices</button>
-                      </div>
-
-                    <select id="voice" name="voice" placeholder="Choose a Voice" required="required"></select>
-
-                    <script>
-                      let voicedata = {};
-                      let allvoices = [];
-                      let opt;
-                      {% for v, vd in voicedata.items() %}
-                      voicedata['{{ v }}'] = { 'vpname': "{{ vd['vpname'] }}", 'wishes': "{{ vd['wishes'] }}", 'transcript': null, 'speaker': "{{ vd['speaker']}}" };
-                      allvoices.push('{{ v }}');
-                      opt = document.createElement('option');
-                      opt.value = '{{ v }}';
-                      //opt.innerHTML = "{{ vd['vpname'] }}";
-                      opt.text = "{{ vd['vpname'] }}";
-                      voice.appendChild(opt);
-                      {% endfor %}
-                    </script>
-
-                    <div id="voiceinfo" class="voiceinfo"></div>
-                    </div>
-
-                    <div>
-                    <label for="phonetics">Language</label>
-                    <br><br>
-                    <select id="phonetic" name="phonetics" placeholder="Choose a Language" required="required">
-                    {% for l in languages %}
-
-                      <option value= "{{l}}"D>{{l}}</option>
-
-                    {% endfor %}
-
-                    </select>
-                    </div>
-
-                    <div>
-                    <input type="hidden" name="fileslist" value="{% for af in audiofiles %};{{af}}{% endfor %}" />
-                    <button type="submit" id="synthesize" name="synthesizebutton" class="btn">Synthesize</button>
-                    </div>
-
-                </div>
-
-
-
-                </form>
-                <br />
-
+            <div id="voiceinfo" class="voiceinfo"></div>
             </div>
-        </div>
+
+            <div>
+            <label for="phonetics">Language</label>
+            <select id="phonetic" form="synthesisform"  name="phonetics" placeholder="Choose a Language" required="required">
+            {% for l in languages %}
+
+              <option value= "{{l}}"D>{{l}}</option>
+
+            {% endfor %}
+            </select>
+            </div>
+
+            <div>
+            <input id="fileslist" type="hidden" form="synthesisform"  name="fileslist" value="{% for af in audiofiles %};{{af}}{% endfor %}" />
+            <button type="submit" form="synthesisform"  id="submitbutton" name="synthesizebutton" class="btn">Synthesize</button>
+            </div>
+
+            </section>
+
+          </div><!-- END FORMFIELDS -->
+
 
         <!-- footer>
           <p><a href="https://ahnen.in/" target="_blank">In Search of Good Ancestors / Ahnen in Arbeit</a></p>
@@ -112,7 +87,30 @@
           <p>~~ perfocraZe International Artist Residency [pIAR] emergency call ~~ <a href="http://support.perfocraze.art/" target="_blank">click here</a> to donate and support threatened LGBT+ performing artists in Ghana</p>
         </footer>
 
+      </div><!-- END WRAPPER -->
 
-        <script src="/js/voicer.js"></script>
+
+        <script>
+          // Populate Voice Data
+          let voicedata = {};
+          let allvoices = [];
+          let opt;
+          {% for v, vd in voicedata.items() %}
+          voicedata['{{ v }}'] = {
+            'name': "{{ vd['name'] }}",
+            'annotations': `{{ vd['annotations'] }}`,
+            'wishes': `{{ vd['wishes'] }}`,
+            'transcript': `{{ vd['transcript'] }}`,
+            'speaker': `{{ vd['speaker']}}`,
+          }
+          allvoices.push('{{ v }}');
+          opt = document.createElement('option');
+          opt.value = '{{ v }}';
+          //opt.innerHTML = "{{ vd['vpname'] }}";
+          opt.text = "{{ vd['name'] }}";
+          voice.appendChild(opt);
+          {% endfor %}
+        </script>
+        <script src="/js/voicesynthesizer.js"></script>
     </body>
 </html>
