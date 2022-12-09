@@ -179,16 +179,12 @@ button {
 button:hover, button:focus {
   box-shadow: inset 0px 0px 10px rgba(255, 255, 255, 1);
   background: linear-gradient(45deg, #FFF, #F22, #0088CC, #FFF);
-  animation: shine 10s linear infinite;
 }
 
 button:active {
   box-shadow: inset 0px 0px 20px rgba(0,0,0,0.5);
   transform: translateY(2px);
-  background: linear-gradient(45deg, #FFF, #F22, #0088CC, #FFF);
-  animation: shine 10s linear infinite;
 }
-
 
 
 

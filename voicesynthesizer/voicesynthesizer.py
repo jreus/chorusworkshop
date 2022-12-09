@@ -76,7 +76,8 @@ if synth.tts_model.language_manager is not None:
 #  print("LANGUAGES", synth.tts_model.language_manager.ids) # coqui < 0.8
   print("LANGUAGES", synth.tts_model.language_manager.language_names)
 
-history = dict()
+voicehistory = dict() # dict of voices to history
+filehistory = dict() # dict of filenames of generated files to their metadata
 available_languages = synth.tts_model.language_manager.language_names
 
 def get_voicedata():
@@ -96,6 +97,7 @@ def get_voicedata():
             with open(mdpath) as json_file:
                 # Replace the default...
                 metadata = json.load(json_file)
+        metadata['filepath'] = vf.name
         voicedata[metadata['name']] = metadata
 
     voicedata = dict(sorted(voicedata.items()))
@@ -121,7 +123,8 @@ def fetch_audiofile(name):
 #create our "home" route using the "index.html" page
 @app.route('/')
 def home():
-    return render_template('index.html', voicedata=get_voicedata(), languages=available_languages)
+    vd = get_voicedata()
+    return render_template('index.html', selectedvoice=list(vd.keys())[0], voicedata=vd, speed=50, variation=50, languages=available_languages)
 
 
 # Request for updated app data and metadata
@@ -139,10 +142,12 @@ def getdata():
 @app.route('/', methods = ['POST'])
 def predict():
 
-    voice = request.form.get('voice')
+    voice = request.form.get('selectedvoice')
     phonetics = request.form.get('phonetics')
     text = request.form.get('text')
     fileslist = request.form.get('fileslist')
+    speed = int(request.form.get('speedval'))
+    variation = int(request.form.get('variationval'))
     if fileslist != "":
         if fileslist[0] == ';':
             fileslist=fileslist[1:]
@@ -155,7 +160,7 @@ def predict():
     # LANGUAGE EXISTS
     # TEXT IS NOT TOO CRAZY (?)
 
-    print(f"PREDICT>>> Got voice:{voice}  ph:{phonetics}  txt:{text}  files:{fileslist}")
+    print(f"PREDICT>>> Got voice:{voice}  ph:{phonetics}  txt:{text} spd:{speed} var:{variation} files:{fileslist}")
 
     # Does voiceprint exist?
     allvoicedata = get_voicedata()
@@ -163,11 +168,11 @@ def predict():
     speaker_wav = VOICEPRINTS_FOLDER.joinpath(voicedata['filename'])
     if speaker_wav.exists():
         # If yes, do synthesis...
-        if voice in history:
-            vhistory = history[voice]
+        if voice in voicehistory:
+            vhistory = voicehistory[voice]
         else:
             vhistory = {'num': 0, 'outputs': list()}
-            history[voice] = vhistory
+            voicehistory[voice] = vhistory
 
         # Unique file name for synthesized output...
         timestamp = datetime.now().strftime("%H_%M_%S")
@@ -179,6 +184,15 @@ def predict():
         style_wav = None
         reference_wav = None
         reference_speaker_name = None
+        model = synth.tts_model
+
+        tmp_model_vals = [ model.length_scale, model.inference_noise_scale_dp ]
+        #model.inference_noise_scale
+        scaled_speed = (((100-speed) / 100.0)**4.1 + 0.001) * 20.0
+        scaled_var = (variation / 100.0)**1.5 * 1.7
+        print(f"   >>> speed: {scaled_speed}  variation: {scaled_var}")
+        model.length_scale = scaled_speed
+        model.inference_noise_scale_dp = scaled_var
         wav = synth.tts(
             text,
             speaker_name,
@@ -188,6 +202,8 @@ def predict():
             reference_wav,
             reference_speaker_name,
         )
+        model.length_scale = tmp_model_vals[0]
+        model.inference_noise_scale_dp = tmp_model_vals[1]
 
         # save the results
         print(" > Saving output to {}".format(save_path))
@@ -196,12 +212,20 @@ def predict():
 
         # Add to history...
         vhistory['num'] += 1
-        vhistory['outputs'].append(save_path)
+        vhistory['outputs'].append(vhistory)
 
-        audiofiles.append(os.path.join('/renders/', save_path.name))
+        filepath = os.path.join('/renders/', save_path.name)
+        filemetadata = {'save_path': save_path, 'file_path': filepath, 'text': text, 'voice': voice, 'phonetics': phonetics}
+        filehistory[filepath] = filemetadata
+        audiofiles.append(filepath)
         print("Reply with Audiofiles:", audiofiles)
 
-        return render_template('index.html', message="Synthesis Success!", audiofiles=audiofiles, voice=voice, text=text, phonetics=phonetics, voicedata=allvoicedata, languages=available_languages)
+        audiofiledata = list()
+        for fp in audiofiles:
+            # For each audiofile, append audiofile meta data from history...
+            audiofiledata.append(filehistory[fp])
+
+        return render_template('index.html', message="Synthesis Success!", audiofiles=audiofiles, audiofiledata=audiofiledata, selectedvoice=voice, text=text, phonetics=phonetics, voicedata=allvoicedata, speed=speed, variation=variation, languages=available_languages)
     else:
         # If no, return an error...
         print(f"ERROR! No voiceprint {voice} found!")

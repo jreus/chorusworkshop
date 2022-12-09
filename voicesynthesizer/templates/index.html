@@ -9,13 +9,15 @@
     </head>
     <body>
 
+      <div id="overlay"><h1>uploading ...</h1></div>
+
       <div id="wrapper">
 
-        <h1>Voice Synthesizer</h1>
+        <h1 class="gradient-glow">Voice Synthesizer</h1>
 
-        <div class="intro">
+        <!-- div class="intro">
           <b><p class="Note">{{message}}</p></b>
-        </div>
+        </div -->
 
         <form id="synthesisform" name="synthesisform" action="{{url_for('predict')}}" method="post" class="info"></form>
 
@@ -26,10 +28,12 @@
           <section id="left-column">
 
             <div class="audioplayers">
-              {% for af in audiofiles %}
+              <aside>Synthesized Voices</aside>
+              {% for af in audiofiledata %}
               <div class="player">{{ loop.index }}
+                <aside>{{af['text']}} - {{af['voice']}} ({{af['phonetics']}})</aside>
                 <audio controls>
-                    <source src="{{af}}" type="audio/wav">
+                    <source src="{{af['file_path']}}" type="audio/wav">
                       Your browser does not support the audio tag.
                 </audio>
               </div>
@@ -41,40 +45,65 @@
 
           <section id="right-column">
 
-            <div id="textdiv">
-            <textarea id="text" name="text" rows="6" cols="50" form="synthesisform" placeholder="Type your text here...">{{text}}</textarea>
-            </div>
+            <section id="synthesis-controls">
 
-            <div id="voicediv">
-              <div class="flexlabel">
-                <label for="voice">Voiceprint</label>
-                <button id="refreshButton" type="button" name="refresh" class="btn-sm">refresh voices</button>
+              <div id="textinput-div">
+              <textarea id="text" class="textbox" name="text" rows="6" cols="50" form="synthesisform" placeholder="Type your text here...">{{text}}</textarea>
               </div>
 
-            <select id="voice" name="voice" form="synthesisform"  placeholder="Choose a Voice" required="required"></select>
+              <div class="flexlabel">
+              <label for="phonetics">Language</label>
+              <select id="phonetic" form="synthesisform"  name="phonetics" placeholder="Choose a Language" required="required">
+              {% for l in languages %}
 
-            <div id="voiceinfo" class="voiceinfo"></div>
-            </div>
+                <option value="{{l}}" {% if l == phonetics %}SELECTED{% endif %}>{{l}}</option>
 
-            <div>
-            <label for="phonetics">Language</label>
-            <select id="phonetic" form="synthesisform"  name="phonetics" placeholder="Choose a Language" required="required">
-            {% for l in languages %}
+              {% endfor %}
+              </select>
+              </div>
 
-              <option value= "{{l}}"D>{{l}}</option>
+              <div class="flexlabel">
+                <label for="speedval">speed</label>
+                <div class="slidercontainer">
+                <input type="range" min="1" max="100" form="synthesisform" value="{{ speed }}" class="slider" name="speedval" id="speedslider">
+                </div>
+                <label for="variationval">variation</label>
+                <div class="slidercontainer">
+                <input type="range" min="1" max="100" form="synthesisform" value="{{ variation }}" class="slider" name="variationval" id="varationslider">
+                </div>
+              </div>
 
-            {% endfor %}
-            </select>
-            </div>
-
-            <div>
-            <input id="fileslist" type="hidden" form="synthesisform"  name="fileslist" value="{% for af in audiofiles %};{{af}}{% endfor %}" />
-            <button type="submit" form="synthesisform"  id="submitbutton" name="synthesizebutton" class="btn">Synthesize</button>
-            </div>
+              <div>
+              <input id="fileslist" type="hidden" form="synthesisform"  name="fileslist" value="{% for af in audiofiles %};{{af}}{% endfor %}" />
+              <button type="submit" form="synthesisform"  id="submitbutton" name="synthesizebutton" class="btn">Synthesize</button>
+              </div>
 
             </section>
 
-          </div><!-- END FORMFIELDS -->
+
+            <section id="voice-info">
+
+              <div class="flexlabel">
+                <label for="selectedvoice">Voice Recording</label>
+                <select id="voice-dropdown" name="selectedvoice" form="synthesisform"  placeholder="Choose a Voice" required="required"></select>
+              </div>
+
+              <div class="flexlabel">
+                <button id="refreshButton" type="button" name="refresh" class="btn-sm">update voice list</button>
+                <audio controls id="voice-recording">
+                    Your browser does not support the audio tag.
+                </audio>
+              </div>
+
+              <div id="wishes" class="voiceinfo"></div>
+              <div id="annotations" class="voiceinfo"></div>
+
+            </section>
+
+          </section>
+
+          </div>
+          <!-- END FORMFIELDS -->
 
 
         <!-- footer>
@@ -84,7 +113,7 @@
         </footer -->
 
         <footer>
-          <p>~~ perfocraZe International Artist Residency [pIAR] emergency call ~~ <a href="http://support.perfocraze.art/" target="_blank">click here</a> to donate and support threatened LGBT+ performing artists in Ghana</p>
+          <p>~~ perfocraZe International Artist Residency [pIAR] emergency call ~~ <a href="http://support.perfocraze.art/" target="_blank">click here</a> to donate and support threatened performing artists in Ghana</p>
         </footer>
 
       </div><!-- END WRAPPER -->
@@ -95,6 +124,8 @@
           let voicedata = {};
           let allvoices = [];
           let opt;
+          let voicedropdown = document.querySelector('#voice-dropdown');
+          let selectedvoice = "{{ selectedvoice }}";
           {% for v, vd in voicedata.items() %}
           voicedata['{{ v }}'] = {
             'name': "{{ vd['name'] }}",
@@ -102,14 +133,16 @@
             'wishes': `{{ vd['wishes'] }}`,
             'transcript': `{{ vd['transcript'] }}`,
             'speaker': `{{ vd['speaker']}}`,
+            'filepath': `{{ vd['filepath']}}`,
           }
           allvoices.push('{{ v }}');
           opt = document.createElement('option');
           opt.value = '{{ v }}';
           //opt.innerHTML = "{{ vd['vpname'] }}";
           opt.text = "{{ vd['name'] }}";
-          voice.appendChild(opt);
+          voicedropdown.appendChild(opt);
           {% endfor %}
+          voicedropdown.value = selectedvoice;
         </script>
         <script src="/js/voicesynthesizer.js"></script>
     </body>

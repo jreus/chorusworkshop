@@ -1,26 +1,49 @@
 const submitForm = document.querySelector('#synthesisform');
 const textfield = document.querySelector('#text');
-const voice = document.querySelector('#voice');
+const voice = document.querySelector('#voice-dropdown');
 const phonetic = document.querySelector('#phonetic');
 const fileslist = document.querySelector('#fileslist');
+const overlay = document.querySelector('#overlay')
+
+const voicefile = document.querySelector('#voice-recording')
+const annotations = document.querySelector('#annotations')
+const wishes = document.querySelector('#wishes')
+
+// sets the overlay inner HTML, and optionally pauses before showing, or hides it after a number of ms
+function setOverlay(innerhtml, msPauseBefore=0, msHideAfter=0) {
+  setTimeout(()=>{
+    overlay.innerHTML = innerhtml;
+    overlay.style.visibility = 'visible';
+    if(msHideAfter > 0) {
+      // Set a hide timeout...
+      setTimeout(()=>{ overlay.style.visibility = 'hidden' }, msHideAfter);
+    }
+  }, msPauseBefore);
+}
 
 // Populate Voice Info
 function voiceSelected(e) {
   let selected = voice.options[voice.selectedIndex];
-  console.log("Voice Selected", voice);
-  console.log("Voice Selected", voice.selectedIndex);
-  console.log("Selected:", selected.value, selected.text);
+  console.log("Voice Selected:", selected.value, selected.text);
   console.log(" MetaData:", voicedata[selected.value]);
+  let recordingfile;
+  recordingfile = voicedata[selected.value]['filepath']
   let annotationstext;
   annotationstext = voicedata[selected.value]['annotations'];
   let wishestext;
   wishestext = voicedata[selected.value]['wishes'];
   let transcripttext;
   transcripttext = voicedata[selected.value]['transcript'];
-  voiceinfo.innerHTML = annotationstext;
+
+  if(e != null) {
+    setOverlay("<h3>voice of "+selected.text+"</h3><br><h3>my wishes</h3><span class='wishes'>"+wishestext+"</span>", 0, 5000);
+  }
+  voicefile.src = "uploads/" + recordingfile;
+  annotations.innerHTML = "<b>Description:</b> " + annotationstext;
+  wishes.innerHTML = "<b>Wishes for use:</b> " + wishestext;
 }
 voice.addEventListener('change', voiceSelected);
-voiceSelected(); // refresh wishes list
+voiceSelected(null); // refresh wishes list
 
 
 function refreshData(e) {
@@ -52,11 +75,13 @@ function refreshData(e) {
         voice.appendChild(opt);
       }
 
-      voiceSelected(); // refresh wishes list
+      voiceSelected(null); // refresh wishes list
+      return true;
 
     } catch(e) {
       console.log("Error", e);
       console.log("Server Error: " + response);
+      return false;
     };
   });
 
@@ -98,7 +123,7 @@ function keyPressed(e) {
     if(num == 0) { num = 10 };
     if((num <= audioplayerDivs.length) && !pressedKeys[num]) {
       let audioDiv = audioplayerDivs[num-1];
-      let audioElement = audioDiv.children[0];
+      let audioElement = audioDiv.children[1];
       console.log(num);
       pressedKeys[num] = true;
       audioElement.currentTime = 0;
@@ -115,7 +140,7 @@ function keyReleased(e) {
     pressedKeys[num] = false;
     if(num <= audioplayerDivs.length) {
       let audioDiv = audioplayerDivs[num-1];
-      let audioElement = audioDiv.children[0];
+      let audioElement = audioDiv.children[1];
       audioElement.pause();
       audioDiv.style.background = "gold";
     }
@@ -124,6 +149,22 @@ function keyReleased(e) {
 
 document.addEventListener('keydown', keyPressed);
 document.addEventListener('keyup', keyReleased);
+
+submitForm.addEventListener('submit', (e)=>{
+
+  // Data error checking...
+
+  let text = textfield.value;
+
+  if (text != "") {
+    setOverlay("<h2>Synthesizing ...</h2><br><quote>"+text+"</quote>", 0, 2000);
+    return true
+  } {
+    setOverlay("<h3>Enter some text to synthesize.</h3>", 0, 2000);
+  }
+  e.preventDefault();
+  return false;
+});
 
 // Synthesis request submission...
 // submitForm.addEventListener('submit', (e)=>{
