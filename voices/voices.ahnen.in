@@ -1,0 +1,11 @@
+server {
+    root /var/www/voices;
+    index index.html index.htm index.nginx-debian.html;
+
+    server_name voices.ahnen.in mozfest23.ahnen.in;
+    listen 80;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
