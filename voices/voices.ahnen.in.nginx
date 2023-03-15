@@ -1,7 +1,12 @@
 server {
 	listen 80;
 	listen [::]:80;
-	root /var/www/voices;
-	index index.html;
+	#root /var/www/voices;
+	#index index.html;
 	server_name voices.ahnen.in mozfest23.ahnen.in;
+
+	location / {
+		include proxy_params;
+		proxy_pass http://unix:/home/jon/chorusworkshop/voices/voices.sock;
+	}
 }

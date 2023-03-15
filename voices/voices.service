@@ -1,0 +1,13 @@
+[Unit]
+Description=Gunicorn instance to serve Voices server
+After=network.target
+
+[Service]
+User=jon
+Group=www-data
+WorkingDirectory=/home/jon/chorusworkshop/voices/
+#Environment="PATH=/home/jon/chorusworkshop/chorusworkshopenv/bin"
+ExecStart=/home/jon/miniconda3/envs/flask/bin/gunicorn --workers 3 --bind unix:voices.sock -m 007 wsgi:app
+
+[Install]
+WantedBy=multi-user.target
