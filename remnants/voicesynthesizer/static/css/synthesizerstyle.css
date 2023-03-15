@@ -1,0 +1,467 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  background: url('/img/ahnen-1.jpg');
+  background-size: cover;
+}
+
+body {
+
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 0.8rem;
+}
+
+h1, h2, h3, h4 {
+  width: 100%;
+  text-align: center;
+  font-weight: normal;
+  padding: 0 0 0 0;
+  margin: 0 0;
+  font-weight: bold;
+}
+
+h1 {
+  letter-spacing: 2rem;
+  font-size: 3rem;
+  color: pink;
+}
+h2 {
+  letter-spacing: 1.3rem;
+  font-size: 2.5rem;
+  color: black;
+}
+h3 {
+  letter-spacing: 1rem;
+  font-size: 2rem;
+  color: black;
+}
+p {
+  font-size: 1.2rem;
+  color: white;
+}
+quote {
+  font-size: 1.2rem;
+  text-align: center;
+  color: black;
+  font-weight: lighter;
+  font-style: italic;
+  width: 100%;
+  padding: 5rem 0rem;
+}
+
+.wishes {
+  font-size: 2rem;
+  text-align: center;
+  color: black;
+  width: 100%;
+  font-weight: lighter;
+  font-style: italic;
+  padding: 2rem 5rem;
+}
+
+.gradient-glow {
+  background: linear-gradient(160deg, #FFFFFF, #FF2222, #FF0000, #0088CC, #FF0000, #FFFFFF);
+  background-size: 200% auto;
+  color: #000;
+  background-clip: text;
+  text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  animation: shine 5s linear infinite;
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+section, article {
+  display: block;
+}
+
+#overlay {
+  position: absolute;
+  width: 100vw;
+  min-height: 30vh;
+  top: 10vh;
+  left: 0;
+  z-index: 10;
+  align-content: center;
+  vertical-align: middle;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px;
+  color: black;
+  opacity: 1.0;
+  background-color: rgba(255,255,255,1.0);
+  border-top: 2px solid black;
+  border-bottom: 2px solid black;
+  visibility: hidden;
+}
+
+#wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 100vh;
+  max-height: 100vh;
+  overflow: auto;
+
+}
+
+#formfields {
+  font-size: 1rem;
+  height: 100%;
+  padding: 1vh 1vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#left-column {
+  flex-direction: column;
+  justify-content: flex-start;
+  min-width: 40vw;
+  background: black;
+}
+
+#middle-column {
+  min-width: 1vw;
+}
+
+#right-column {
+  max-width: 55vw;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.textbox {
+  min-height: 3rem;
+  width: 100%;
+  background-color: rgba(255,255,255,0.6);
+  border-radius: 4rem;
+  border: 2px solid black;
+  padding: 1rem 2rem;
+}
+
+#synthesis-controls {
+  background-color: rgba(255,255,255,0.6);
+  border-radius: 4rem;
+  border: 2px solid pink;
+  padding: 1rem 2rem;
+  margin-bottom: 1vh;
+}
+
+#textinput-div {
+  min-width: 40vw;
+}
+#textinput-div > textarea {
+  width: 100%;
+}
+
+#voice-info {
+  background-color: rgba(255,255,255,0.6);
+  border-radius: 4rem;
+  border: 2px solid pink;
+  padding: 1rem 2rem;
+}
+
+#voice-info > select {
+  width: 100%;
+}
+
+#annotations {
+  min-width: 50vw;
+  font-weight: lighter;
+  font-size: 1rem;
+  margin: 1vh 0px;
+}
+
+#wishes {
+  min-width: 50vw;
+  font-weight: lighter;
+  font-size: 1rem;
+  margin: 1vh 0px;
+}
+
+#submitbutton {
+  margin: 1vh 0px;
+  width: 100%;
+  border-radius: 10rem;
+}
+
+input {
+  font-size: 1.6em;
+  margin: 1vh 0;
+  width: 100%;
+}
+
+
+.textbox {
+  min-height: 3rem;
+  width: 100%;
+  background-color: rgba(255,255,255,0.6);
+  border-radius: 4rem;
+  border: 2px solid black;
+  padding: 1rem 2rem;
+}
+
+
+
+select {
+  font-size: 1.5rem;
+  font-weight: bold;
+  min-height: 1rem;
+  margin: 0 1rem;
+}
+
+.flexlabel {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin: 0.5rem 0;
+  padding: 0 0;
+  vertical-align: middle;
+}
+
+label {
+  line-height: 3em;
+  vertical-align: middle;
+}
+
+button {
+  font-size: 2rem;
+  font-weight: bold;
+  padding: 2rem 0.1rem;
+  background-size: 200% auto;
+  background: #dd4488;
+  text-align: center;
+  color: white;
+  border: none;
+  transition: all 0.2s;
+  margin: 0.5em auto;
+}
+
+button.btn {
+  width: calc(50% - 0.5rem);
+  animation: shine 10s linear infinite;
+}
+
+button:hover, button:focus {
+  /*box-shadow: inset 0px 0px 20px rgba(255, 255, 255, 1);*/
+  box-shadow: inset 0px 0px 20px rgba(0, 0, 0, 1);
+  background: linear-gradient(45deg, #FFF, #F22, #0088CC, #FFF);
+}
+
+button:active {
+  box-shadow: inset 0px 0px 20px rgba(0,0,0,0.5);
+  transform: translateY(2px);
+  background: linear-gradient(45deg, #FFF, #F22, #0088CC, #FFF);
+  animation: shine 10s linear infinite;
+}
+
+button.btn-sm {
+  font-size: 1rem;
+  padding: 0.5rem;
+  /*background: rgb(255, 100, 100);*/
+  border-radius: 1rem;
+}
+
+input {
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box
+}
+
+.slidercontainer {
+  width: 100%;
+  margin: auto 0.5em;
+  padding: 0;
+}
+
+/* The slider itself */
+.slider {
+  padding: 0;
+  margin: 0;
+  -webkit-appearance: none;  /* Override default CSS styles */
+  appearance: none;
+  width: 90%; /* Full-width */
+  height: 25px; /* Specified height */
+  background: #d3d3d3; /* Grey background */
+  outline: none; /* Remove outline */
+  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  transition: opacity .2s;
+}
+
+/* Mouse-over effects */
+.slider:hover {
+  opacity: 1; /* Fully shown on mouse-over */
+}
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+  background: red; /* Green background */
+  cursor: pointer; /* Cursor on hover */
+}
+
+.slider::-moz-range-thumb {
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+  background:red; /* Green background */
+  cursor: pointer; /* Cursor on hover */
+}
+
+.Note {
+    text-align: center;
+    margin: 7px;
+    padding: 7px 0px;
+}
+
+.intro {
+    font-size: 20px;
+}
+
+.voiceinfo {
+  text-align: left;
+  padding: 10px 0px;
+  font-size: 1em;
+  font-family: monospace;
+}
+
+/*Design of links/buttons*/
+a.link {
+    font-weight: bold;
+    background-color: orange;
+    padding: 8px 16px;
+    display: inline-block;
+    text-decoration: none;
+    border-radius:3px;
+    color: black;
+    border-color: black;
+    border-style: ridge;
+}
+
+.table {
+    display: table;
+    margin: 0 auto;
+    margin-left: 33.85%;
+}
+
+ul#horizontal-list {
+    min-width: 696px;
+    list-style: none;
+}
+
+/*This section is concerned with the link layout*/
+a.link {
+    margin-right: 20px;
+    margin-left: 115px;
+}
+a.scikit {
+    margin-left: 65px;
+}
+
+ul#horizontal-list li {
+    display: inline;
+}
+
+
+
+.audioplayers {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-gap: 1px;
+}
+
+.audioplayers > aside {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: grey;
+  font-size: 1rem;
+}
+
+.player {
+  position: relative;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: gold;
+  border-radius: 25px;
+  text-align:center;
+  font-size: 2em;
+  padding: 1rem 4rem 4rem 3.5rem;
+  margin: 2px;
+  min-height: 4vh;
+  min-width: 4vw;
+}
+
+.player > aside {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: grey;
+  font-size: 0.9rem;
+  font-weight: lighter;
+  font-style: italic;
+  padding: 1rem 1rem;
+  text-align: left;
+  width: inherit;
+  overflow:hidden;
+}
+
+.player > audio {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+
+
+.column-item {
+  margin: 5px;
+}
+
+div {
+  font-weight:700;
+}
+
+footer {
+  position: absolute;
+  margin: 0;
+  width: 100%;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  background-color: rgba(150,150,255,1.0);
+  bottom: 0;
+}
+
+footer > p {
+  font-size: 1rem;
+  margin: 0.6rem;
+}
+
+
+/*Animation for links*/
+a:link {color:blue}
+a:visited {color:black}
+a:active {color:red}
+a:hover {font-size: 120%; color:black}

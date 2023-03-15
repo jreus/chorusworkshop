@@ -1,0 +1,255 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  background: url('/img/ahnen-1.jpg');
+  background-size: cover;
+}
+
+body {
+
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 0.8rem;
+}
+
+h1, h2 {
+  width: 100%;
+  letter-spacing: 2rem;
+  font-size: 3rem;
+  text-align: center;
+  font-weight: normal;
+  padding: 0 0 0 0;
+  margin: 0.5rem 0;
+  color: pink;
+  font-weight: bold;
+
+}
+
+p {
+  font-size: 1.2rem;
+  color: white;
+  font-weight: bold;
+
+}
+
+.gradient-glow {
+  background: linear-gradient(160deg, #FFFFFF, #FF2222, #FF0000, #0088CC, #FF0000, #FFFFFF);
+  background-size: 200% auto;
+  color: #000;
+  background-clip: text;
+  text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  animation: shine 5s linear infinite;
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+
+section, article {
+  display: block;
+}
+
+#overlay {
+  position: absolute;
+  width: 80vw;
+  height: 80vh;
+  top: 10vh;
+  left: 10vw;
+  align-content: center;
+  vertical-align: middle;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px;
+  background-color: rgba(0,0,0, 0.7);
+  border-radius: 4rem;
+  visibility: hidden;
+
+}
+
+#wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+}
+
+#formfields {
+  font-size: 1rem;
+  height: 100%;
+  padding: 5vh 5vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#left-column {
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+#middle-column {
+  min-width: 1vw;
+}
+
+#right-column {
+  min-width: 60vw;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+#annotations {
+  min-width: 50vw;
+  min-height: 30vh;
+  font-size: 1.2rem;
+  margin: 1vh 0px;
+}
+
+#wishes {
+  min-width: 50vw;
+  min-height: 30vh;
+  font-size: 1.2rem;
+  margin: 1vh 0px;
+}
+
+#submitbutton {
+  margin: 1vh 0px;
+  width: 100%;
+  border-radius: 10rem;
+}
+
+input {
+  font-size: 1.6em;
+  margin: 1vh 0;
+  width: 100%;
+}
+
+
+.textbox {
+  min-height: 3rem;
+  width: 100%;
+  background-color: rgba(255,255,255,0.6);
+  border-radius: 4rem;
+  border: 2px solid black;
+  padding: 1rem 2rem;
+}
+
+
+.log-text {
+  font-style: italic;
+}
+
+.log-data {
+  font-family: monospace;
+  background: lightgrey;
+}
+
+
+
+.controls {
+  min-width: 300px;
+  width: 40%;
+  padding: 0px 1vw;
+}
+
+button {
+  font-size: 2rem;
+  font-weight: bold;
+  padding: 2rem 0.1rem;
+  width: calc(50% - 0.5rem);
+  background-size: 200% auto;
+  background: #dd4488;
+  text-align: center;
+  color: white;
+  border: none;
+  transition: all 0.2s;
+  margin: 0.5em auto;
+}
+
+button:hover, button:focus {
+  box-shadow: inset 0px 0px 10px rgba(255, 255, 255, 1);
+  background: linear-gradient(45deg, #FFF, #F22, #0088CC, #FFF);
+}
+
+button:active {
+  box-shadow: inset 0px 0px 20px rgba(0,0,0,0.5);
+  transform: translateY(2px);
+}
+
+
+
+/* Checkbox hack to control information box display */
+
+#checkbox-label {
+  font-size: 3rem;
+  position: absolute;
+  top: 2px;
+  right: 3px;
+  z-index: 5;
+  cursor: pointer;
+  background-color: black;
+  border-radius: 10px;
+}
+
+p {
+  display: inline;
+}
+
+input[type=file] {
+  display: inline-block;
+  width: 50%;
+  margin: 0 3rem;
+}
+
+aside {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: translateX(100%);
+  transition: 0.3s all ease-out;
+  background-color: #efefef;
+  padding: 1rem;
+}
+
+aside p {
+  font-size: 1.2rem;
+  margin: 0.5rem 0;
+}
+
+aside a {
+  color: #666;
+}
+
+/* Toggled State of information box */
+input[type=checkbox]:checked ~ aside {
+  transform: translateX(0);
+}
+
+/* Cursor when clip name is clicked over */
+
+.clip p {
+  cursor: pointer;
+}
+
+/* Adjustments for wider screens */
+@media all and (min-width: 800px) {
+  /* Don't take all the space as readability is lost when line length
+     goes past a certain size */
+  .wrapper {
+    width: 90%;
+    max-width: 2000px;
+    margin: 0 auto;
+  }
+}

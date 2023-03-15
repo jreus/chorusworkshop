@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Uploading Voice Recording and Future Wishes</title>
+    <link href="css/uploaderstyle.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+
+    <div id="overlay"><h1>uploading ...</h1></div>
+
+    <div id="wrapper">
+
+    <header>
+      <h1 class="gradient-glow">Upload a Voice Recording</h1>
+    </header>
+
+
+    <div id="formfields">
+
+      <form id="uploadform" name="uploadform" action="{{url_for('upload_voice_file')}}" method="post" class="info" enctype="multipart/form-data"></form>
+
+      <p class="gradient-glow" >Your name</p>
+      <input class="textbox" type="text" form="uploadform" id="name" name="name" placeholder="What shall we call you?" value="{{ name }}" />
+      <br/><br/>
+      <div style="margin: 1rem 0">
+      <p class="gradient-glow">Your voice recording (wav, ogg or mp3)</p>
+      <input type="file" id="audiofile" name="audiofile" form="uploadform" />
+      </div>
+
+      <p class="gradient-glow">Annotations for your voice recording.</p>
+      <textarea class="textbox" form="uploadform" id="annotations" name="annotations" placeholder="Annotations for your voice recording.">{{ annotations }}</textarea>
+      <br/><br/>
+      <p class="gradient-glow">A list of wishes you have for how your voice will be used in the future.</p>
+      <textarea class="textbox" form="uploadform" id="wishes" name="wishes" placeholder="Type a list of wishes for how your voice should speak and where it should be used.">{{ wishes }}</textarea>
+      <br />
+      <button type="submit" form="uploadform" id="submitbutton" name="submitbutton" class="btn">Upload Recording & Annotations</button>
+
+      <div id="log"></dig>
+
+    </div>
+    <!-- End Formfields Container -->
+
+  </div>
+
+    <script src="js/upload.js"></script>
+
+  </body>
+</html>
