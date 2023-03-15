@@ -189,7 +189,7 @@ def predict():
         tmp_model_vals = [ model.length_scale, model.inference_noise_scale_dp ]
         #model.inference_noise_scale
         scaled_speed = (((100-speed) / 100.0)**4.1 + 0.001) * 20.0
-        scaled_var = (variation / 100.0)**1.5 * 1.7
+        scaled_var = (variation / 100.0)**1.5 * 1.5
         print(f"   >>> speed: {scaled_speed}  variation: {scaled_var}")
         model.length_scale = scaled_speed
         model.inference_noise_scale_dp = scaled_var
