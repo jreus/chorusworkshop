@@ -16,11 +16,11 @@ import numpy as np
 from flask import Flask, request, redirect, jsonify, render_template, send_from_directory, flash, url_for
 from werkzeug.utils import secure_filename
 from datetime import datetime
+import typing
 
-VOICEPRINTS_FOLDER = Path("static/uploads/")
-if not VOICEPRINTS_FOLDER.exists():
-    VOICEPRINTS_FOLDER.mkdir()
-
+RECORDINGS_FOLDER = Path("static/uploads/")
+if not RECORDINGS_FOLDER.exists():
+    RECORDINGS_FOLDER.mkdir()
 
 app = Flask(__name__)
 
@@ -35,33 +35,41 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def get_voicerecordings(items_only:bool=False, sort_by:str='date') -> typing.Union[dict, list]:
+    '''
+    Get a dictionary of recording_name->metadata and sort by date
 
-def get_voicedata():
+    items_only  if True, returns a list of metadata dicts instead of a dict with keys
     '''
-    Get a dictionary of voice_name->voice_metadata - sort alphabetically
-    '''
-    print("Voiceprint Folder is", VOICEPRINTS_FOLDER)
-    vps = VOICEPRINTS_FOLDER.glob('*.wav')
-    voicefiles = [v for v in vps]
-    voicedata = dict()
-    for vf in voicefiles: # We should have a metadata file for each voice.. if not fill metadata with nothing...
-        mdpath = VOICEPRINTS_FOLDER.joinpath(f"{vf.stem}.json")
+    print("Recordings Folder is", RECORDINGS_FOLDER)
+    audiofiles = RECORDINGS_FOLDER.glob('*.wav') # TODO: also glob mp3 and webm?
+    recordingfiles = [r for r in audiofiles]
+    audiodata = dict()
+    for af in recordingfiles: # We should have a metadata file for each voice.. if not fill metadata with nothing...
+        mdpath = RECORDINGS_FOLDER.joinpath(f"{af.stem}.json")
         # Default
-        metadata = { 'filename': vf.name, 'name': vf.stem, 'annotations': '', 'wishes': '', 'transcript': '' }
+        metadata = { 'filename': af.name, 'name': af.stem, 'annotations': '', 'wishes': '', 'transcript': '' }
         if mdpath.exists():
             # All good!
             with open(mdpath) as json_file:
                 # Replace the default...
                 metadata = json.load(json_file)
-        metadata['filepath'] = vf.name
-        voicedata[metadata['name']] = metadata
+        metadata['filename'] = af.name
+        metadata['filepath'] = os.path.join(RECORDINGS_FOLDER, af.name)
+        audiodata[metadata['name']] = metadata
 
-    voicedata = dict(sorted(voicedata.items()))
-    print("Got Voices", voicedata.keys())
-    #print("Data:", voicedata)
-    return voicedata
+    def filesortfunc(audiodataval:dict):
+        return audiodataval['name']
 
-print("Found voices:", get_voicedata().keys())
+    if items_only:
+        res = sorted(list(audiodata.values()), key=filesortfunc) # TODO: sort by date
+    else:
+        res = dict(sorted(audiodata.items())) # TODO: sort by date
+    #print("Got Recordings: ", audiodata.keys())
+    print("Got Recordings: ", res)
+    return res
+
+print("Found recordings:", get_voicerecordings().keys())
 
 
 # Serve Static Files
@@ -76,8 +84,7 @@ def fetch_static(name):
 @app.route('/', methods = ['GET'])
 def home():
     #return render_template('index.html', names=["The Voice of Authority","The Voice of Reason"], wishes=["I love you...","What is love?"], message="Test Message..")
-    return render_template('index.html', names=["",""], wishes=["",""], message="")
-
+    return render_template('record.html', names=["",""], wishes=["",""], message="")
 
 @app.route('/record', methods = ['GET'])
 def record():
@@ -89,12 +96,10 @@ def upload():
 
 @app.route('/listen', methods = ['GET'])
 def listen():
-    vd = get_voicedata()
-    if len(vd.keys()) > 0:
-        selected = list(vd.keys())[0]
-    else:
-        selected = ''
-    return render_template('listen.html', selectedvoice=selected, voicedata=vd)
+    audiodata = get_voicerecordings(items_only=True)
+    print(f"Sending audiofiledata: {audiodata}")
+    return render_template('listen.html', audiofiledata=audiodata)
+
 
 
 # Set a post method to save audio files

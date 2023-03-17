@@ -4,7 +4,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
-        <title>Artificial Voice Instrument</title>
+        <title>Voice Contributions</title>
         <link href="css/synthesizerstyle.css" rel="stylesheet" type="text/css">
     </head>
     <body>
@@ -13,27 +13,18 @@
 
       <div id="wrapper">
 
-        <h1 class="gradient-glow">Voice Synthesizer</h1>
-
-        <!-- div class="intro">
-          <b><p class="Note">{{message}}</p></b>
-        </div -->
-
-        <form id="synthesisform" name="synthesisform" action="" method="post" class="info"></form>
-
+        <h1 class="gradient-glow">Listening</h1>
 
         <!---Containerize main page for styling--->
-        <div id="formfields">
-
-          <section id="left-column">
+          <section id="main-column">
 
             <div class="audioplayers">
-              <aside>Synthesized Voices</aside>
+              <aside>Voice Recordings</aside>
               {% for af in audiofiledata %}
               <div class="player">{{ loop.index }}
-                <aside>{{af['text']}} - {{af['voice']}} ({{af['phonetics']}})</aside>
+                <aside>{{af['name']}} - {{af['annotations']}}</aside>
                 <audio controls>
-                    <source src="{{af['file_path']}}" type="audio/wav">
+                    <source src="{{af['filepath']}}" type="audio/wav">
                       Your browser does not support the audio tag.
                 </audio>
               </div>
@@ -41,64 +32,6 @@
             </div>
 
           </section>
-
-
-          <section id="right-column">
-
-            <section id="synthesis-controls">
-
-              <div id="textinput-div">
-              <textarea id="text" class="textbox" name="text" rows="6" cols="50" form="synthesisform" placeholder="Type your text here...">{{text}}</textarea>
-              </div>
-
-              <div class="flexlabel">
-              <label for="phonetics">Language</label>
-              <select id="phonetic" form="synthesisform"  name="phonetics" placeholder="Choose a Language" required="required">
-              </select>
-              </div>
-
-              <div class="flexlabel">
-                <label for="speedval">speed</label>
-                <div class="slidercontainer">
-                <input type="range" min="1" max="100" form="synthesisform" value="{{ speed }}" class="slider" name="speedval" id="speedslider">
-                </div>
-                <label for="variationval">variation</label>
-                <div class="slidercontainer">
-                <input type="range" min="1" max="100" form="synthesisform" value="{{ variation }}" class="slider" name="variationval" id="varationslider">
-                </div>
-              </div>
-
-              <div>
-              <input id="fileslist" type="hidden" form="synthesisform"  name="fileslist" value="{% for af in audiofiles %};{{af}}{% endfor %}" />
-              <button type="submit" form="synthesisform"  id="submitbutton" name="synthesizebutton" class="btn">Synthesize</button>
-              </div>
-
-            </section>
-
-
-            <section id="voice-info">
-
-              <div class="flexlabel">
-                <label for="selectedvoice">Voice Recording</label>
-                <select id="voice-dropdown" name="selectedvoice" form="synthesisform"  placeholder="Choose a Voice" required="required"></select>
-              </div>
-
-              <div class="flexlabel">
-                <button id="refreshButton" type="button" name="refresh" class="btn-sm">update voice list</button>
-                <audio controls id="voice-recording">
-                    Your browser does not support the audio tag.
-                </audio>
-              </div>
-
-              <div id="wishes" class="voiceinfo"></div>
-              <div id="annotations" class="voiceinfo"></div>
-
-            </section>
-
-          </section>
-
-          </div>
-          <!-- END FORMFIELDS -->
 
 
         <!-- footer>
@@ -116,28 +49,6 @@
 
         <script>
           // Populate Voice Data
-          let voicedata = {};
-          let allvoices = [];
-          let opt;
-          let voicedropdown = document.querySelector('#voice-dropdown');
-          let selectedvoice = "{{ selectedvoice }}";
-          {% for v, vd in voicedata.items() %}
-          voicedata['{{ v }}'] = {
-            'name': "{{ vd['name'] }}",
-            'annotations': `{{ vd['annotations'] }}`,
-            'wishes': `{{ vd['wishes'] }}`,
-            'transcript': `{{ vd['transcript'] }}`,
-            'speaker': `{{ vd['speaker']}}`,
-            'filepath': `{{ vd['filepath']}}`,
-          }
-          allvoices.push('{{ v }}');
-          opt = document.createElement('option');
-          opt.value = '{{ v }}';
-          //opt.innerHTML = "{{ vd['vpname'] }}";
-          opt.text = "{{ vd['name'] }}";
-          voicedropdown.appendChild(opt);
-          {% endfor %}
-          voicedropdown.value = selectedvoice;
         </script>
         <script src="/js/voicesynthesizer.js"></script>
     </body>

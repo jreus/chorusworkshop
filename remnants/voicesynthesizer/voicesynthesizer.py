@@ -141,7 +141,6 @@ def getdata():
 #Set a post method to yield predictions on page
 @app.route('/', methods = ['POST'])
 def predict():
-
     voice = request.form.get('selectedvoice')
     phonetics = request.form.get('phonetics')
     text = request.form.get('text')
