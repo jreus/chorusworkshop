@@ -13,16 +13,20 @@
 
       <div id="wrapper">
 
-        <h1 class="gradient-glow">Listening</h1>
+        <header>
+          <a href="/record">record</a>
+          <a href="/listen">listen</a>
+        </header>
+
+        <h2 class="gradient-glow">Listening</h2>
 
         <!---Containerize main page for styling--->
           <section id="main-column">
-
             <div class="audioplayers">
-              <aside>Voice Recordings</aside>
+              <aside></aside>
               {% for af in audiofiledata %}
-              <div class="player">{{ loop.index }}
-                <aside>{{af['name']}} - {{af['annotations']}}</aside>
+              <div class="player">
+                <aside><b>{{ loop.index }}</b>: {{af['name']}} -- {{af['annotations']}}</aside>
                 <audio controls>
                     <source src="{{af['filepath']}}" type="audio/wav">
                       Your browser does not support the audio tag.
@@ -34,22 +38,12 @@
           </section>
 
 
-        <!-- footer>
-          <p><a href="https://ahnen.in/" target="_blank">In Search of Good Ancestors / Ahnen in Arbeit</a></p>
-          <p><a href="http://varia.zone/" target="_blank">Varia</a></p>
-          <p><a href="https://coqui.ai/" target="_blank">coqui.AI</a></p>
-        </footer -->
-
-        <footer>
-          <p>~~ perfocraZe International Artist Residency [pIAR] emergency call ~~ <a href="http://support.perfocraze.art/" target="_blank">click here</a> to donate and support threatened performing artists in Ghana</p>
-        </footer>
-
       </div><!-- END WRAPPER -->
 
 
         <script>
           // Populate Voice Data
         </script>
-        <script src="/js/voicesynthesizer.js"></script>
+        <script src="/js/voiceplayer.js"></script>
     </body>
 </html>

@@ -13,6 +13,11 @@ body {
   font-size: 0.8rem;
 }
 
+header {
+  width: 100%;
+  text-align: center;
+}
+
 .wrapper {
   height: 100%;
   padding: 5vh 0;
@@ -33,7 +38,7 @@ h1, h2 {
   margin: 1vh 0;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content:space-around;
 }
 
 section, article {
@@ -46,7 +51,7 @@ canvas {
   width: 100%;
 }
 
-.center-column {
+.log-column {
   min-width: 300px;
   font-size: 1em;
   word-wrap: break-word;
@@ -64,7 +69,6 @@ canvas {
 }
 
 
-
 .controls {
   min-width: 300px;
   width: 40%;
@@ -76,11 +80,16 @@ canvas {
 }
 
 .controls input[type=text] {
-  width: 60%;
+  width: 100%;
+  margin: 0.3rem 0.0;
 }
 
 .controls textarea {
   width: 100%;
+}
+
+.record-column {
+  max-width: 30vw;
 }
 
 button {

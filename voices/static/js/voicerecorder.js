@@ -12,20 +12,23 @@ function screenLogger(text, data) {
   log.appendChild(p);
 }
 
-const forms = [form1, form2];
-const names = [name1, name2];
-const wishes = [wishes1, wishes2];
-const recordButtons = [record1, record2];
-const stopButtons = [stop1, stop2];
-const soundClipsContainers = [document.querySelector('#soundclips1'), document.querySelector('#soundclips2')];
-const canvases = [document.querySelector('#visualizer1'), document.querySelector('#visualizer2')];
+const forms = [document.querySelector('#voiceform')];
+const names = [document.querySelector('#name')];
+const annotations = [document.querySelector('#annotation')];
+const recordButtons = [document.querySelector('#recordButton')];
+const stopButtons = [document.querySelector('#stopButton')];
+const submitButtons = [document.querySelector('#submitButton')];
+const soundClipsContainers = [document.querySelector('#soundclips')];
+const canvases = [document.querySelector('#visualizer')];
 const mainSection = document.querySelector('#controls');
 
 // disable stop button while not recording
-stopButtons.forEach((stopButton)=>{stopButton.disabled = true});
+for(let i = 0; i < stopButtons.length; i++) {
+  stopButtons[i].disabled = true;
+}
 
 // visualiser setup - create web audio api context and canvas
-const canvasContexts = [canvases[0].getContext("2d"), canvases[1].getContext("2d")];
+const canvasContexts = [canvases[0].getContext("2d")];
 let app = {}
 
 //main block for doing the audio recording
@@ -66,14 +69,15 @@ if (navigator.mediaDevices.getUserMedia) {
         encoderPath: "/js/opusrecorder/encoderWorker.min.js",
         sourceNode: app.signalLeft
       }),
-      new Recorder({
-        monitorGain: 0.0,
-        recordingGain: 1.0,
-        numberOfChannels: 1,
-        wavBitDepth: 16,
-        encoderPath: "/js/opusrecorder/encoderWorker.min.js",
-        sourceNode: app.signalRight
-      })
+      // Just use the left channel to record
+      // new Recorder({
+      //   monitorGain: 0.0,
+      //   recordingGain: 1.0,
+      //   numberOfChannels: 1,
+      //   wavBitDepth: 16,
+      //   encoderPath: "/js/opusrecorder/encoderWorker.min.js",
+      //   sourceNode: app.signalRight
+      // })
     ];
 
     console.log("Set up recorders", app.recorders);
@@ -82,7 +86,7 @@ if (navigator.mediaDevices.getUserMedia) {
     for(let i=0; i < app.recorders.length; i++) {
       let recorder = app.recorders[i];
       let nameInput = names[i];
-      let wishInput = wishes[i];
+      let annotationInput = annotations[i];
 
       // Set up recorder controls buttons...
       // TODO: Maybe create these buttons dynamically?
@@ -95,6 +99,7 @@ if (navigator.mediaDevices.getUserMedia) {
         // On form submission, prevent default
         e.preventDefault();
 
+        console.log("SUBMITTING!...")
 
         // Fetch the audio object (if a recording has been made)
         let clipElement = soundClips.querySelector('.clip');
@@ -103,6 +108,8 @@ if (navigator.mediaDevices.getUserMedia) {
         if(audioElement) {
           // Construct a FormData object
           let formData = new FormData(form);
+          let formActionTarget = form.action;
+          let formAction = "POST";
           let fileName = audioElement.clipName;
           console.log("Append audio data audioBlob and clipName from", audioElement);
 
@@ -135,7 +142,7 @@ if (navigator.mediaDevices.getUserMedia) {
             }
           });
 
-          request.open("POST", "/");
+          request.open(formAction, formActionTarget);
           request.send(formData);
 
 
@@ -192,17 +199,16 @@ if (navigator.mediaDevices.getUserMedia) {
       recorder.ondataavailable = (typedArray) => {
         console.log("data available after #"+i+" Recorder.stop() called.");
 
-
-
         let clipName = nameInput.value;
-        let wishesText = wishInput.value;
+        let annotationText = annotationInput.value;
         if(clipName == '') {
-          //clipName = new Date().toISOString() + ".wav";
-          clipName = "MyVoiceprint"
-          clipName = prompt('Enter a memorable name for your voiceprint', clipName);
+          // Auto generate a clip name?
+          // clipName = "Anonymous_" + new Date().toISOString();
+          clipName = "Recording-" + Math.round(Math.random() * 300);
+          // clipName = prompt('Enter a memorable name for your voiceprint', clipName);
           nameInput.value = clipName;
-          wishesText = prompt('Enter your future wishes for your voice', wishesText);
-          wishInput.value = wishesText;
+          // wishesText = prompt('Enter your future wishes for your voice', wishesText);
+          // wishInput.value = wishesText;
         }
         clipName = clipName + '.wav';
 
@@ -268,18 +274,17 @@ if (navigator.mediaDevices.getUserMedia) {
 }
 
 function visualize(stream) {
-
   app.analyserLeft = app.audioCtx.createAnalyser();
-  app.analyserRight = app.audioCtx.createAnalyser();
+  //app.analyserRight = app.audioCtx.createAnalyser();
   app.analyserLeft.fftSize = 2048;
-  app.analyserRight.fftSize = 2048;
+  //app.analyserRight.fftSize = 2048;
   const bufferLength = app.analyserLeft.frequencyBinCount;
-  app.dataArrays = [new Uint8Array(bufferLength), new Uint8Array(bufferLength)];
+  app.dataArrays = [new Uint8Array(bufferLength)];
 
   console.log("Frequency Bin Count on Analyser", app.analyserLeft.frequencyBinCount);
 
   app.channelSplitter.connect(app.analyserLeft, 0);
-  app.channelSplitter.connect(app.analyserRight, 1);
+  //app.channelSplitter.connect(app.analyserRight, 1);
 
   draw()
 
@@ -288,49 +293,44 @@ function visualize(stream) {
     requestAnimationFrame(draw);
 
     app.analyserLeft.getByteTimeDomainData(app.dataArrays[0]);
-    app.analyserRight.getByteTimeDomainData(app.dataArrays[1]);
+    //app.analyserRight.getByteTimeDomainData(app.dataArrays[1]);
 
-    for(let idx=0; idx < canvases.length; idx++) {
-      let canvasCtx = canvasContexts[idx];
-      let canvas = canvases[idx];
-      let dataArray = app.dataArrays[idx];
+    let dataArray = app.dataArrays[0];
+    const canvas = canvases[0];
+    const canvasCtx = canvasContexts[0];
+    const WIDTH = canvas.width
+    const HEIGHT = canvas.height;
 
-      const WIDTH = canvas.width
-      const HEIGHT = canvas.height;
+    canvasCtx.fillStyle = 'rgb(200, 200, 200)';
+    canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+    canvasCtx.lineWidth = 2;
+    canvasCtx.strokeStyle = 'rgb(0, 0, 0)';
+    canvasCtx.beginPath();
 
-      canvasCtx.fillStyle = 'rgb(200, 200, 200)';
-      canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
-      canvasCtx.lineWidth = 2;
-      canvasCtx.strokeStyle = 'rgb(0, 0, 0)';
-      canvasCtx.beginPath();
+    let sliceWidth = WIDTH * 1.0 / bufferLength;
+    let x = 0;
 
-      let sliceWidth = WIDTH * 1.0 / bufferLength;
-      let x = 0;
+    for(let i = 0; i < bufferLength; i++) {
 
-      for(let i = 0; i < bufferLength; i++) {
+      let v = dataArray[i] / 128.0;
+      let y = v * HEIGHT/2;
 
-        let v = dataArray[i] / 128.0;
-        let y = v * HEIGHT/2;
-
-        if(i === 0) {
-          canvasCtx.moveTo(x, y);
-        } else {
-          canvasCtx.lineTo(x, y);
-        }
-
-        x += sliceWidth;
+      if(i === 0) {
+        canvasCtx.moveTo(x, y);
+      } else {
+        canvasCtx.lineTo(x, y);
       }
 
-      canvasCtx.lineTo(canvas.width, canvas.height/2);
-      canvasCtx.stroke();
+      x += sliceWidth;
     }
+
+    canvasCtx.lineTo(canvas.width, canvas.height/2);
+    canvasCtx.stroke();
   }
 }
 
 window.onresize = function() {
-  for(let i=0; i<canvases.length;i++) {
-    //canvases[i].width = (mainSection.offsetWidth - 20) / 2;
-  }
+  //canvas.width = (mainSection.offsetWidth - 20) / 2;
 }
 
 window.onresize();

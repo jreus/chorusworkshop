@@ -84,11 +84,12 @@ def fetch_static(name):
 @app.route('/', methods = ['GET'])
 def home():
     #return render_template('index.html', names=["The Voice of Authority","The Voice of Reason"], wishes=["I love you...","What is love?"], message="Test Message..")
-    return render_template('record.html', names=["",""], wishes=["",""], message="")
+    #return render_template('record.html', names=["",""], wishes=["",""], message="")
+    return render_template('record.html', names=["",""], annotations=["",""], message="")
 
 @app.route('/record', methods = ['GET'])
 def record():
-    return render_template('record.html', names=["",""], wishes=["",""], message="")
+    return render_template('record.html', names=["",""], annotations=["",""], message="")
 
 @app.route('/upload', methods = ['GET'])
 def upload():
@@ -103,9 +104,9 @@ def listen():
 
 
 # Set a post method to save audio files
-@app.route('/saveaudio', methods = ['POST'])
-def save_audio():
-    print("save_audio() with", request.files)
+@app.route('/record', methods = ['POST'])
+def upload_recording():
+    print("upload_recording() with", request.files)
 
     if 'file' not in request.files:
         flash("No file part")
@@ -113,38 +114,41 @@ def save_audio():
 
     audiofile = request.files['file']
 
-    print("We found audiofile", audiofile, "With Filename", audiofile.filename, "Is allowed?", allowed_file(audiofile.filename))
+    print("Received from FORM: audiofile", audiofile, "With Filename", audiofile.filename)
 
     if audiofile.filename == '':
         flash('Unnamed file')
         return redirect(request.url)
 
     if audiofile and allowed_file(audiofile.filename):
-        print("Audiofile is allowed")
         formid = request.form.get('formid')
-        vpname = request.form.get('name')
-        wishes = request.form.get('wishes')
-        transcript = request.form.get('transcript')
-        speaker = request.form.get('speaker')
+        recordingname = request.form.get('name')
+        annotation = request.form.get('annotation')
         filename = secure_filename(audiofile.filename)
         audio_filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        afidx=0
+        print(f"Got formid:{formid} -- name:{recordingname} -- annotation:{annotation} -- filename:{filename}")
+        # TODO: check if file already exists
+        while os.path.exists(audio_filepath):
+            print(f"File {filename} already exists... trying {filename}{afidx}")
+            audio_filepath = os.path.join(app.config['UPLOAD_FOLDER'], f"{filename}{afidx}")
+            afidx += 1
+
         audiofile.save(audio_filepath)
 
         # Create json file
         metadata = {
             'filename': filename,
-            'vpname': vpname,
-            'wishes': wishes,
-            'transcript': transcript,
-            'speaker': speaker
+            'name': recordingname,
+            'annotations': annotation,
         }
         json_filename = Path(audio_filepath).stem
-        json_filename =  f"{json_filename}.json"
+        json_filename = f"{json_filename}.json"
         json_filepath = os.path.join(app.config['UPLOAD_FOLDER'], json_filename)
         with open(json_filepath, 'w') as outfile:
             json.dump(metadata, outfile)
 
-        print(f"SAVING AUDIO>>> Got form {formid},  voiceprint name:{vpname}  wishes:{wishes}")
+        print(f"SAVING AUDIO>>> Got form {formid},  recording name:{recordingname}  annotation:{annotation}")
         print(f"       SAVING: {filename} // {json_filename}")
         return "Success"
 

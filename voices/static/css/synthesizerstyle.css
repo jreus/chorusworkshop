@@ -6,7 +6,6 @@
 
 html, body {
   height: 100%;
-  background: url('/img/ahnen-1.jpg');
   background-size: cover;
 }
 
@@ -23,6 +22,11 @@ h1, h2, h3, h4 {
   padding: 0 0 0 0;
   margin: 0 0;
   font-weight: bold;
+}
+
+header {
+  text-align: center;
+  width: 100%;
 }
 
 h1 {
@@ -342,7 +346,7 @@ input {
 }
 
 /*Design of links/buttons*/
-a.link {
+/* a.link {
     font-weight: bold;
     background-color: orange;
     padding: 8px 16px;
@@ -352,7 +356,7 @@ a.link {
     color: black;
     border-color: black;
     border-style: ridge;
-}
+} */
 
 .table {
     display: table;
@@ -366,24 +370,22 @@ ul#horizontal-list {
 }
 
 /*This section is concerned with the link layout*/
-a.link {
+/* a.link {
     margin-right: 20px;
     margin-left: 115px;
 }
 a.scikit {
     margin-left: 65px;
-}
+} */
 
 ul#horizontal-list li {
     display: inline;
 }
 
-
-
 .audioplayers {
   position: relative;
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: auto auto auto auto;
   grid-gap: 1px;
 }
 
@@ -412,17 +414,18 @@ ul#horizontal-list li {
 }
 
 .player > aside {
-  position: absolute;
+  /*position: absolute;*/
   top: 0;
   left: 0;
   color: grey;
   font-size: 0.9rem;
   font-weight: lighter;
   font-style: italic;
-  padding: 1rem 1rem;
+  padding: 0.2rem 0.2rem;
   text-align: left;
   width: inherit;
-  overflow:hidden;
+  /*overflow:hidden;*/
+  overflow:visible;
 }
 
 .player > audio {
@@ -461,7 +464,7 @@ footer > p {
 
 
 /*Animation for links*/
-a:link {color:blue}
+/* a:link {color:blue}
 a:visited {color:black}
 a:active {color:red}
-a:hover {font-size: 120%; color:black}
+a:hover {font-size: 120%; color:black} */
