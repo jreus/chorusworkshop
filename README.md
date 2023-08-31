@@ -1,4 +1,4 @@
-# Chorus Workshops
+# Ahnen in Arbeit Voice Workshops
 
 Setting up flask to broadcast locally: https://stackoverflow.com/questions/7023052/configure-flask-dev-server-to-be-visible-across-the-network
 
